@@ -1,3 +1,5 @@
+#ifndef LOCATOR_H
+#define LOCATOR_H
 /***************************************************************************
                           locator.h  -  description
                              -------------------
@@ -23,9 +25,6 @@
  *    along with KLog.  If not, see <https://www.gnu.org/licenses/>.         *
  *                                                                           *
  *****************************************************************************/
-
-#ifndef LOCATOR_H
-#define LOCATOR_H
 #include <math.h>
 #include <QString>
 #include <QRegularExpression>

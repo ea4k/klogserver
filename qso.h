@@ -206,10 +206,6 @@ public:
     bool setKeepSatTab(bool _k);
     bool getKeepSatTab();
 
-
-
-
-
     bool add();
     QString getADIF();
 
