@@ -209,8 +209,9 @@ public:
 
 
 
-    bool add();
 
+    bool add();
+    QString getADIF();
 
 private:
 

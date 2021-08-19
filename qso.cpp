@@ -81,6 +81,8 @@ void QSO::clear()
     stx_string = QString();
     freq_tx = -1.0;
     freq_rx = -1.0;
+    pwr_rx = 0.0;
+    pwr_tx = 0.0;
     age = -1.0;
     sota_ref = QString();
     pwr_rx = 0.0;
@@ -1356,4 +1358,116 @@ bool QSO::setData(const QString &_adifPair)
     }
 
     return true;
+}
+
+QString QSO::getADIF()
+{
+    QString adifRecord;
+
+    if (callsign.length()>0)
+    {
+        adifRecord = "<CALL:" + QString::number(callsign.length()) + ">" + callsign + " ";
+    }
+    else
+    {
+        return QString();
+    }
+
+    if (mode.length()>0)
+    {
+        adifRecord = adifRecord + "<MODE:" + QString::number(mode.length()) + ">" + mode + " ";
+    }
+    else
+    {
+        return QString();
+    }
+
+    if (band.length()>0)
+    {
+        adifRecord = adifRecord + "<BAND:" + QString::number(band.length()) + ">" + band + " ";
+    }
+
+    if (freq_tx>0.0)
+    {
+        adifRecord = adifRecord + "<FREQ:" + QString::number(freq_tx>0.0) + ">" +  QString::number(freq_tx) + " ";
+    }
+
+    if (gridsquare.length()>1)
+    {
+        adifRecord = adifRecord + "<GRIDSQUARE:" + QString::number(gridsquare.length()) + ">" +  gridsquare + " ";
+    }
+
+    if (myGridsquare.length()>1)
+    {
+        adifRecord = adifRecord + "<MY_GRIDSQUARE:" + QString::number(myGridsquare.length()) + ">" +  myGridsquare + " ";
+    }
+
+    if (RST_tx.length()>0)
+    {
+        adifRecord = adifRecord + "<RST_SENT:" + QString::number(RST_tx.length()) + ">" +  RST_tx + " ";
+    }
+
+    if (RST_rx.length()>0)
+    {
+        adifRecord = adifRecord + "<RST_RCVD:" + QString::number(RST_rx.length()) + ">" +  RST_rx + " ";
+    }
+
+    if (comment.length()>0)
+    {
+        adifRecord = adifRecord + "<COMMENT:" + QString::number(comment.length()) + ">" +  comment + " ";
+    }
+
+    if (stationCallsign.length()>0)
+    {
+        adifRecord = adifRecord + "<STATION_CALLSIGN:" + QString::number(stationCallsign.length()) + ">" +  stationCallsign + " ";
+    }
+
+    if (operatorCall.length()>0)
+    {
+        adifRecord = adifRecord + "<OPERATOR:" + QString::number(operatorCall.length()) + ">" +  operatorCall + " ";
+    }
+
+    if (qso_dateTime.date().isValid())
+    {
+        adifRecord = adifRecord + "<QSO_DATE:" + QString::number(qso_dateTime.date().toString("yyyyMMdd").length()) + ">" +  qso_dateTime.date().toString("yyyyMMdd") + " ";
+
+    }
+
+    if (qso_dateTime.time().isValid())
+    {
+        adifRecord = adifRecord + "<TIME_ON:" + QString::number(qso_dateTime.time().toString("hhmm").length()) + ">" +  qso_dateTime.time().toString("hhmm") + " ";
+    }
+
+    if (qso_dateTime_off.date().isValid())
+    {
+        adifRecord = adifRecord + "<QSO_DATE_OFF:" + QString::number(qso_dateTime_off.date().toString("yyyyMMdd").length()) + ">" +  qso_dateTime_off.date().toString("yyyyMMdd") + " ";
+    }
+
+    if (qso_dateTime_off.time().isValid())
+    {
+        adifRecord = adifRecord + "<TIME_OFF:" + QString::number(qso_dateTime_off.time().toString("hhmm").length()) + ">" +  qso_dateTime_off.time().toString("hhmm") + " ";
+
+    }
+
+    if (pwr_tx>0)
+    {
+        adifRecord = adifRecord + "<TX_PWR:" + QString::number(QString::number(pwr_tx).length()) + ">" +  QString::number(pwr_tx) + " ";
+    }
+
+    if (pwr_rx>0)
+    {
+        adifRecord = adifRecord + "<RX_PWR:" + QString::number(QString::number(pwr_rx).length()) + ">" +  QString::number(pwr_rx) + " ";
+    }
+
+    if (srx_string.length()>0)
+    {
+        adifRecord = adifRecord + "<SRX_STRING:" + QString::number(srx_string.length()) + ">" +  srx_string + " ";
+    }
+
+    if (stx_string.length()>0)
+    {
+        adifRecord = adifRecord + "<STX_STRING:" + QString::number(stx_string.length()) + ">" +  stx_string + " ";
+    }
+
+    return adifRecord;
 }

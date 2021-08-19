@@ -18,10 +18,10 @@ MainClass::MainClass(QObject *parent) : QObject(parent)
 
 void MainClass::slotWSJTXQSOReceived(QSO _qso)
 {
-    qDebug() << Q_FUNC_INFO << ": " << _qso.getCall();
-    qDebug() << Q_FUNC_INFO << ": " << _qso.getBand();
-    qDebug() << Q_FUNC_INFO << ": " << _qso.getFreqTX();
-    qDebug() << Q_FUNC_INFO << ": " << _qso.getMode();
+    //qDebug() << Q_FUNC_INFO << ": " << _qso.getCall();
+    //qDebug() << Q_FUNC_INFO << ": " << _qso.getBand();
+    //qDebug() << Q_FUNC_INFO << ": " << _qso.getFreqTX();
+    //qDebug() << Q_FUNC_INFO << ": " << _qso.getMode();
     fileManager->saveQSO(_qso);
 
 }

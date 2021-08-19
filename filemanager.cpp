@@ -37,14 +37,23 @@ bool FileManager::saveQSO(QSO _qso)
     if (file.open(QIODevice::WriteOnly | QIODevice::Append))
     {
         QTextStream out(&file);
-        out << "<CALL:" << QString::number(_qso.getCall().length()) << ">" << _qso.getCall();
-        out << "<MODE:" << QString::number(_qso.getMode().length()) << ">" << _qso.getMode();
+        QString aux = _qso.getADIF();
+        if (aux.length()>0)
+        {
+           out << aux << Qt::endl;
+        }
+        else
+        {
+            qDebug() << Q_FUNC_INFO << ": Empty QSO, not saved";
+            return false;
+        }
     }
     else
     {
         qDebug() << Q_FUNC_INFO << ": Failed to open the file to append";
         return false;
     }
+
     return true;
 }
 
