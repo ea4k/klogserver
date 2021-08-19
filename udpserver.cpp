@@ -34,7 +34,7 @@ UDPServer::UDPServer(QObject *parent) :
 {
         //qDebug() << "UDPServer::UDPServer"  << Qt::endl;
        //address = QString("127.0.0.1");
-
+    qso = new QSO();
        port = 2237;
        haveNetworkInterface = false;
        socketServer = new QUdpSocket(this);
@@ -52,7 +52,7 @@ UDPServer::UDPServer(QObject *parent) :
        }
        */
         util = new Utilities;
-        logging = false;
+        logging = true;
         realtime = false;
 
         connect(socketServer,SIGNAL(readyRead()),this,SLOT(slotReadPendingDatagrams()));
@@ -79,7 +79,7 @@ bool UDPServer::start()
      //qDebug() << Q_FUNC_INFO << Qt::endl;
     if ( (port>0) && (port<65535) )
     {
-         //qDebug() << "UDPServer::start: calling startNow " << Qt::endl;
+        //qDebug() << "UDPServer::start: calling startNow " << Qt::endl;
         return startNow(port, groupAddress);
     }
     else
@@ -267,7 +267,7 @@ void UDPServer::parse(const QByteArray &msg)
     //if ((magic != 2914831322) || (id != "WSJT-X"))
     if (magic != 2914831322)
     {
-         //qDebug() << "UDPServer::parse: - Magic BAD FORMAT = " << QString::number(magic)<< Qt::endl;
+        //qDebug() << "UDPServer::parse: - Magic BAD FORMAT = " << QString::number(magic)<< Qt::endl;
         return;
     }
 
@@ -323,7 +323,7 @@ void UDPServer::parse(const QByteArray &msg)
                 frequencyDouble = frequencyDouble/1000000; // Change to MHz
 
                  //qDebug() << "UDPServer::parse: Data to be logged: Comment: " << comments << Qt::endl;
-                qso = new QSO;
+
 
                 qso->clear();
                 qso->setCall(dx_call);
@@ -343,7 +343,7 @@ void UDPServer::parse(const QByteArray &msg)
                 qso->setSTX_String(exchange_sent);
 
                 emit logged_qso(*qso);
-                qDebug() << "UDPServer::parse: emitted = " << qso->getCall() << Qt::endl;
+                //qDebug() << "UDPServer::parse: emitted = " << qso->getCall() << Qt::endl;
             }
             else
             {

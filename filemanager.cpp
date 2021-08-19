@@ -1,10 +1,8 @@
-#ifndef KLOGDEFINITIONS_H
-#define KLOGDEFINITIONS_H
 /***************************************************************************
-                          klogdefinitions.h  -  description
+                          filemanager.cpp  -  description
                              -------------------
-    begin                : oct 2020
-    copyright            : (C) 2020 by Jaime Robles
+    begin                : aug 2021
+    copyright            : (C) 2021 by Jaime Robles
     user                : jaime@robles.es
  ***************************************************************************/
 
@@ -25,21 +23,33 @@
  *    along with KLog.  If not, see <https://www.gnu.org/licenses/>.         *
  *                                                                           *
  *****************************************************************************/
+#include "filemanager.h"
 
-#include <QString>
-enum ExportMode {ModeLotW, ModeADIF, ModeClubLog, ModeEQSL, ModeQRZ};
-enum OnLineProvider {ClubLog, LoTW, eQSL, QRZ}; //, HamQTH, HRDLog
-enum OnlineErrorCode {Ok, Fail};
-enum OnlineErrorReason {Other, Auth, DupeQSO, WrongLogBook};
-enum DebugLogLevel {Info, Debug};
-enum ValidFieldsForStats {DXCC, GridSquare};
+FileManager::FileManager()
+{
+    fileName = "log.adi";
+}
 
-struct EntityData { // Used to pass a list of data from World to dxccstatuswidget
-  int dxcc;
-  QString mainprefix;
-  QString name;
-  QString isoname;
+bool FileManager::saveQSO(QSO _qso)
+{
+    qDebug() << Q_FUNC_INFO << ": " << _qso.getCall();
+    QFile file(fileName);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Append))
+    {
+        QTextStream out(&file);
+        out << "<CALL:" << QString::number(_qso.getCall().length()) << ">" << _qso.getCall();
+        out << "<MODE:" << QString::number(_qso.getMode().length()) << ">" << _qso.getMode();
+    }
+    else
+    {
+        qDebug() << Q_FUNC_INFO << ": Failed to open the file to append";
+        return false;
+    }
+    return true;
+}
 
-} ;
-
-#endif // KLOGDEFINITIONS_H
+bool FileManager::setFileName (const QString &_fn)
+{
+    fileName = _fn;
+    return true;
+}

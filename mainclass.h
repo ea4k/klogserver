@@ -4,6 +4,7 @@
 #include <QObject>
 #include "qso.h"
 #include "udpserver.h"
+#include "filemanager.h"
 
 class MainClass : public QObject
 {
@@ -16,6 +17,7 @@ private slots:
 
 private:
     UDPServer *udpserver;
+    FileManager *fileManager;
 
 };
 

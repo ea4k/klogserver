@@ -32,9 +32,8 @@
 #include <QDebug>
 #include "utilities.h"
 
-class QSO : public QObject
+class QSO
 {
-    Q_OBJECT
 
 public:
     QSO();

@@ -73,6 +73,7 @@ public:
     void setNetworkInterface(const QString &_t);
 
 private:
+
     void readPendingDatagrams();
     void parse(const QByteArray &msg);
     void adifParse(QByteArray &msg);
@@ -103,7 +104,7 @@ private:
 #endif
 
 signals:
-   void logged_qso (QSO _qso);
+   void logged_qso (const QSO &_qso);
 
 private slots:
     void slotReadPendingDatagrams();

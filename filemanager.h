@@ -1,10 +1,10 @@
-#ifndef KLOGDEFINITIONS_H
-#define KLOGDEFINITIONS_H
+#ifndef FILEMANAGER_H
+#define FILEMANAGER_H
 /***************************************************************************
-                          klogdefinitions.h  -  description
+                          filemanager.h  -  description
                              -------------------
-    begin                : oct 2020
-    copyright            : (C) 2020 by Jaime Robles
+    begin                : aug 2021
+    copyright            : (C) 2021 by Jaime Robles
     user                : jaime@robles.es
  ***************************************************************************/
 
@@ -25,21 +25,18 @@
  *    along with KLog.  If not, see <https://www.gnu.org/licenses/>.         *
  *                                                                           *
  *****************************************************************************/
+#include "qso.h"
 
-#include <QString>
-enum ExportMode {ModeLotW, ModeADIF, ModeClubLog, ModeEQSL, ModeQRZ};
-enum OnLineProvider {ClubLog, LoTW, eQSL, QRZ}; //, HamQTH, HRDLog
-enum OnlineErrorCode {Ok, Fail};
-enum OnlineErrorReason {Other, Auth, DupeQSO, WrongLogBook};
-enum DebugLogLevel {Info, Debug};
-enum ValidFieldsForStats {DXCC, GridSquare};
+class FileManager
+{
+public:
+    FileManager();
+    bool saveQSO(QSO _qso);
+    bool setFileName (const QString &_fn);
 
-struct EntityData { // Used to pass a list of data from World to dxccstatuswidget
-  int dxcc;
-  QString mainprefix;
-  QString name;
-  QString isoname;
+private:
+    QString fileName;
 
-} ;
+};
 
-#endif // KLOGDEFINITIONS_H
+#endif // FILEMANAGER_H
