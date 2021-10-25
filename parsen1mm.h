@@ -1,11 +1,9 @@
-#ifndef UDPSERVER_H
-#define UDPSERVER_H
 /***************************************************************************
-                          udpserver.h  -  description
+                          parsen1mm.h  -  description
                              -------------------
-    begin                : oct 2020
-    copyright            : (C) 2020 by Jaime Robles
-    user                : jaime@robles.es
+    begin                : ocy 2021
+    copyright            : (C) 2021 by Jaime Robles
+    user                 : jaime@robles.es
  ***************************************************************************/
 
 /*****************************************************************************
@@ -25,68 +23,19 @@
  *    along with KLogServer.  If not, see <https://www.gnu.org/licenses/>.   *
  *                                                                           *
  *****************************************************************************/
-
-#include <QNetworkInterface>
-#include <QUdpSocket>
+#ifndef PARSEN1MM_H
+#define PARSEN1MM_H
 #include <QObject>
-#include <QHostAddress>
-#include <QDataStream>
-#include "utilities.h"
-#include "parsen1mm.h"
-#include "parsewsjtx.h"
+#include <QtDebug>
 
-class UDPServer : public QObject
+class ParseN1MM  : public QObject
 {
     Q_OBJECT
-
 public:
-    explicit UDPServer(QObject *parent = nullptr);
-    bool start();
 
-    bool stop();
-    bool isStarted();
-    void setLogging(const bool _t);
-    void setRealTimeUpdate(const bool _t);
-    //void setAddress(const QString &_address);
-    void setPort(const int _port);
-    void setNetworkInterface(const QString &_t);
-
-private:
-    void readPendingDatagrams();
+    ParseN1MM();
+    ~ParseN1MM();
     void parse(const QByteArray &msg);
-    void leaveMultiCastGroup();
-    void joinMultiCastGroup();
-    bool startNow(quint16 _port, QHostAddress const& _multicast_group_address);
-
-    QNetworkInterface networkInterface;
-    QUdpSocket *socketServer;
-    QHostAddress groupAddress;
-
-    //QString address;
-    int port;
-    bool logging, realtime;
-    bool haveNetworkInterface;
-
-    Utilities *util;
-    ParseWSJTX *parseWSJTX;
-    ParseN1MM *parseN1MM;
-
-#if QT_VERSION >= 0x050400
-    static quint32 constexpr schema_number {3};
-#elif QT_VERSION >= 0x050200
-    static quint32 constexpr schema_number {2};
-#else
-    // Schema 1 (Qt_5_0) is broken
-#error "Qt version 5.2 or greater required"
-#endif
-
-signals:
-
-
-private slots:
-    void slotReadPendingDatagrams();
-
-
 };
 
-#endif // UDPSERVER_H
+#endif // PARSEN1MM_H

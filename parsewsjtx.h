@@ -1,11 +1,9 @@
-#ifndef UDPSERVER_H
-#define UDPSERVER_H
 /***************************************************************************
-                          udpserver.h  -  description
+                          parsewsjtx.h  -  description
                              -------------------
-    begin                : oct 2020
-    copyright            : (C) 2020 by Jaime Robles
-    user                : jaime@robles.es
+    begin                : ocy 2021
+    copyright            : (C) 2021 by Jaime Robles
+    user                 : jaime@robles.es
  ***************************************************************************/
 
 /*****************************************************************************
@@ -25,68 +23,58 @@
  *    along with KLogServer.  If not, see <https://www.gnu.org/licenses/>.   *
  *                                                                           *
  *****************************************************************************/
+#ifndef PARSEWSJTX_H
+#define PARSEWSJTX_H
 
-#include <QNetworkInterface>
-#include <QUdpSocket>
 #include <QObject>
-#include <QHostAddress>
+#include <QtGlobal>
+#include <QString>
+#include <QDir>
+#include <QDateTime>
+#include <QDate>
+#include <QTime>
+#include "locator.h"
+#include <QtDebug>
 #include <QDataStream>
 #include "utilities.h"
-#include "parsen1mm.h"
-#include "parsewsjtx.h"
 
-class UDPServer : public QObject
+#include "klogdefinitions.h"
+
+enum Type
+    {
+      Heartbeat,
+      Status,
+      Decode,
+      Clear,
+      Reply,
+      QSOLogged,
+      Close,
+      Replay,
+      HaltTx,
+      FreeText,
+      WSPRDecode,
+      Location,
+      LoggedADIF,
+      HighlightCallsign,
+      SwitchConfiguration,
+      Configure,
+      maximum_message_type_     // ONLY add new message types
+                                // immediately before here
+};
+
+class ParseWSJTX : public QObject
 {
     Q_OBJECT
-
 public:
-    explicit UDPServer(QObject *parent = nullptr);
-    bool start();
-
-    bool stop();
-    bool isStarted();
-    void setLogging(const bool _t);
-    void setRealTimeUpdate(const bool _t);
-    //void setAddress(const QString &_address);
-    void setPort(const int _port);
-    void setNetworkInterface(const QString &_t);
+    ParseWSJTX();
+    ~ParseWSJTX();
+    void parse(const QByteArray &msg);
 
 private:
-    void readPendingDatagrams();
-    void parse(const QByteArray &msg);
-    void leaveMultiCastGroup();
-    void joinMultiCastGroup();
-    bool startNow(quint16 _port, QHostAddress const& _multicast_group_address);
-
-    QNetworkInterface networkInterface;
-    QUdpSocket *socketServer;
-    QHostAddress groupAddress;
-
-    //QString address;
-    int port;
-    bool logging, realtime;
-    bool haveNetworkInterface;
-
-    Utilities *util;
-    ParseWSJTX *parseWSJTX;
-    ParseN1MM *parseN1MM;
-
-#if QT_VERSION >= 0x050400
-    static quint32 constexpr schema_number {3};
-#elif QT_VERSION >= 0x050200
-    static quint32 constexpr schema_number {2};
-#else
-    // Schema 1 (Qt_5_0) is broken
-#error "Qt version 5.2 or greater required"
-#endif
 
 signals:
 
-
-private slots:
-    void slotReadPendingDatagrams();
-
-
+    void logged_qsos (QString _dxcall);
 };
 
-#endif // UDPSERVER_H
+#endif // PARSEWSJTX_H

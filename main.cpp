@@ -9,42 +9,38 @@
 /*****************************************************************************
  * This file is part of KLogServer                                           *
  *                                                                           *
- *    KLog is free software: you can redistribute it and/or modify           *
+ *    KLogsServer is free software: you can redistribute it and/or modify    *
  *    it under the terms of the GNU General Public License as published by   *
  *    the Free Software Foundation, either version 3 of the License, or      *
  *    (at your option) any later version.                                    *
  *                                                                           *
- *    KLog is distributed in the hope that it will be useful,                *
+ *    KLogserver is distributed in the hope that it will be useful,          *
  *    but WITHOUT ANY WARRANTY; without even the implied warranty of         *
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
  *    GNU General Public License for more details.                           *
  *                                                                           *
  *    You should have received a copy of the GNU General Public License      *
- *    along with KLog.  If not, see <https://www.gnu.org/licenses/>.         *
+ *    along with KLogServer.  If not, see <https://www.gnu.org/licenses/>.   *
  *                                                                           *
  *****************************************************************************/
 
 #include <QCoreApplication>
-#include <QLocale>
-#include <QTranslator>
+#include <QCommandLineParser>
 #include <QObject>
 #include "mainclass.h"
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    QCoreApplication app(argc, argv);
+    app.setApplicationName(QString("KLogServer"));
+    app.setOrganizationName("EA4K");
+    app.setOrganizationDomain("klog.xyz");
+    app.setApplicationVersion(QString(APP_VERSION));
+    QStringList arguments;
+    QTextStream cout(stdout);
 
-    QTranslator translator;
-    const QStringList uiLanguages = QLocale::system().uiLanguages();
-    for (const QString &locale : uiLanguages) {
-        const QString baseName = "klogserver_" + QLocale(locale).name();
-        if (translator.load(":/i18n/" + baseName)) {
-            a.installTranslator(&translator);
-            break;
-        }
-    }
     MainClass main;
 
 
-    return a.exec();
+    return app.exec();
 }

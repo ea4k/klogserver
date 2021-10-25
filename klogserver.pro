@@ -27,6 +27,8 @@ QT -= gui
 QT += core \
     network
 
+VERSION = 0.0.1
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
 CONFIG += c++11 console
 CONFIG -= app_bundle
@@ -40,6 +42,8 @@ SOURCES += \
         locator.cpp \
         main.cpp \
         mainclass.cpp \
+        parsen1mm.cpp \
+        parsewsjtx.cpp \
         qso.cpp \
         udpserver.cpp \
         utilities.cpp
@@ -60,6 +64,8 @@ HEADERS += \
     klogdefinitions.h \
     locator.h \
     mainclass.h \
+    parsen1mm.h \
+    parsewsjtx.h \
     qso.h \
     udpserver.h \
     utilities.h
