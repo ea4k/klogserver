@@ -647,7 +647,10 @@ QString ADIFForField::getADIFForSRx_String(const QString &_data)
 QString ADIFForField::getADIFForSTx_String(const QString &_data)
 {
     if (_data.length ()<1)
-         return QString();
+    {
+        return QString();
+    }
+
     return getADIFPair("STX_STRING", _data);
 }
 
@@ -668,6 +671,7 @@ QString ADIFForField::getADIFForSRx(const QString &_data)
 
 QString ADIFForField::getADIFForSTx(const QString &_data)
 {
+    //qDebug() << Q_FUNC_INFO << ": " << _data;
     bool ok;
     int i = _data.toInt(&ok);
     if (!ok)

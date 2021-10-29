@@ -34,7 +34,7 @@ ParseN1MM::~ParseN1MM(){}
 
 void ParseN1MM::parse(const QByteArray &msg)
 {
-     qDebug() << Q_FUNC_INFO << ": " << QString::fromStdString(msg.toStdString());
+     //qDebug() << Q_FUNC_INFO << ": " << QString::fromStdString(msg.toStdString());
      QXmlStreamReader xml(msg);
      while (!xml.atEnd()) {
          //qDebug() << Q_FUNC_INFO << ": In the while";
@@ -150,6 +150,7 @@ void ParseN1MM::parseXMLContact(QXmlStreamReader &_xml)
         }
         else if (_xml.name () == "countryprefix")
         {
+            qso->setPfx (_xml.readElementText ());
             //qso-> (_xml.readElementText ());
         }
         else if (_xml.name () == "wpxprefix")
@@ -162,7 +163,7 @@ void ParseN1MM::parseXMLContact(QXmlStreamReader &_xml)
         }
         else if (_xml.name () == "continent")
         {
-            //qso->setContinent(_xml.readElementText ());
+            qso->setCont (_xml.readElementText ());
         }
         else if (_xml.name () == "snt")
         {

@@ -262,32 +262,32 @@ QString QSO::getPrecedence()
 
 bool QSO::isSame(QSO *qso)
 {
-    qDebug() << Q_FUNC_INFO << callsign << "/" << qso->callsign;
-    qDebug() << Q_FUNC_INFO << qso_dateTime.toString ("yyyy-MM-dd hh:mm:ss") << "/" << qso->qso_dateTime.toString("yyyy-MM-dd hh:mm:ss");
-    qDebug() << Q_FUNC_INFO << band << "/" << qso->band;
-    qDebug() << Q_FUNC_INFO << ": Different mode";
+    //qDebug() << Q_FUNC_INFO << callsign << "/" << qso->callsign;
+    //qDebug() << Q_FUNC_INFO << qso_dateTime.toString ("yyyy-MM-dd hh:mm:ss") << "/" << qso->qso_dateTime.toString("yyyy-MM-dd hh:mm:ss");
+    //qDebug() << Q_FUNC_INFO << band << "/" << qso->band;
+    //qDebug() << Q_FUNC_INFO << ": Different mode";
 
     if (callsign != qso->callsign )
     {
-        qDebug() << Q_FUNC_INFO << ": Different call";
+        //qDebug() << Q_FUNC_INFO << ": Different call";
         return false;
     }
     if (qso_dateTime != qso->qso_dateTime)
     {
-       qDebug() << Q_FUNC_INFO << ": Different qdatetime";
+       //qDebug() << Q_FUNC_INFO << ": Different qdatetime";
         return false;
     }
     if (band != qso->band)
     {
-       qDebug() << Q_FUNC_INFO << ": Different band";
+       //qDebug() << Q_FUNC_INFO << ": Different band";
         return false;
     }
     if (mode != qso->mode)
     {
-        qDebug() << Q_FUNC_INFO << ": Different mode";
+        //qDebug() << Q_FUNC_INFO << ": Different mode";
         return false;
     }
-    qDebug() << Q_FUNC_INFO << ": ALL THE SAME";
+    //qDebug() << Q_FUNC_INFO << ": ALL THE SAME";
     return true;
 }
 

@@ -36,7 +36,7 @@ MainClass::MainClass(QObject *parent) : QObject(parent)
     {qDebug() << Q_FUNC_INFO << ": Start OK";}
     else
     {
-        qDebug() << Q_FUNC_INFO << ": Start NOK";
+        //qDebug() << Q_FUNC_INFO << ": Start NOK";
     }
 
     //Qt::ConnectionType ctype = Qt::DirectConnection;

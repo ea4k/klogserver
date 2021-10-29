@@ -35,7 +35,7 @@ ParseWSJTX::~ParseWSJTX(){}
 void ParseWSJTX::parse(const QByteArray &msg)
 {
     //qDebug() << "UDPServer::parse: " << msg << QT_ENDL;
-    qDebug() <<Q_FUNC_INFO << ": " << QString::fromStdString(msg.toStdString());
+    //qDebug() <<Q_FUNC_INFO << ": " << QString::fromStdString(msg.toStdString());
     //in >> time_off >> dx_call >> dx_grid >> frequency >> mode >> report_sent >> report_received >>
     //        tx_power >> comments >> name >> time_on >> operatorCall >> de_call >> de_grid >>
     //        exchange_sent >> exchange_received;

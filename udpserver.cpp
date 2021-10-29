@@ -64,19 +64,19 @@ UDPServer::UDPServer(QObject *parent) :
 
 void UDPServer::slotReadPendingDatagrams()
 {
-    qDebug() << Q_FUNC_INFO;
+    //qDebug() << Q_FUNC_INFO;
     while (socketServer->hasPendingDatagrams()) {
         QByteArray datagram;
         datagram.resize(socketServer->pendingDatagramSize());
         QHostAddress sender;
         quint16 senderPort;
-        qDebug() << "UDPServer::slotReadPendingDatagrams: length = " << QString::number(socketServer->pendingDatagramSize()) ;
+        //qDebug() << "UDPServer::slotReadPendingDatagrams: length = " << QString::number(socketServer->pendingDatagramSize()) ;
         socketServer->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
         parse (datagram);
-        qDebug() << "UDPServer::slotReadPendingDatagrams: = " << datagram ;
+        //qDebug() << "UDPServer::slotReadPendingDatagrams: = " << datagram ;
     }
 
-    qDebug() << Q_FUNC_INFO << " - END";
+    //qDebug() << Q_FUNC_INFO << " - END";
 }
 
 bool UDPServer::start()
@@ -225,7 +225,7 @@ void UDPServer::parse(const QByteArray &msg)
 
     if (msg.startsWith ("<?xml"))
     {
-        qDebug() << Q_FUNC_INFO << ": N1MM detected! *******************************";
+        //qDebug() << Q_FUNC_INFO << ": N1MM detected! *******************************";
 
         parseN1MM->parse(msg);
         return;
@@ -317,12 +317,12 @@ void UDPServer::setRealTimeUpdate(const bool _t)
 
 void UDPServer::slotLoggedQSO(QSO *_qso)
 {
-    qDebug() << Q_FUNC_INFO;
+    //qDebug() << Q_FUNC_INFO;
     //QSO qso = _qso;
 
     if (lastQso->isSame (_qso))
     {
-        qDebug() << Q_FUNC_INFO << ": Same QSO, exitting!";
+        //qDebug() << Q_FUNC_INFO << ": Same QSO, exitting!";
         return;
     }
 
@@ -333,7 +333,7 @@ void UDPServer::slotLoggedQSO(QSO *_qso)
 
     if (!_qso->isValid ())
     {
-        qDebug() << Q_FUNC_INFO << ": Not valid QSO, exitting!";
+        //qDebug() << Q_FUNC_INFO << ": Not valid QSO, exitting!";
         return;
     }
 
@@ -341,5 +341,5 @@ void UDPServer::slotLoggedQSO(QSO *_qso)
     fileManager.saveQSO(_qso);
     _qso->clear ();
 
-    qDebug() << Q_FUNC_INFO << " - END";
+    //qDebug() << Q_FUNC_INFO << " - END";
 }

@@ -1,3 +1,4 @@
 TBD - 0.1
 - First "release" of the software.
+- Receives QSOs from N1MM and stores the data in an ADIF file.
 - Receives QSOs from WSJTX and stores the data in an ADIF file.
