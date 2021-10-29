@@ -9,20 +9,20 @@
  ***************************************************************************/
 
 /*****************************************************************************
- * This file is part of KLogServer                                           *
+ * This file is part of KLog.                                                *
  *                                                                           *
- *    KLogsServer is free software: you can redistribute it and/or modify    *
+ *    KLog is free software: you can redistribute it and/or modify           *
  *    it under the terms of the GNU General Public License as published by   *
  *    the Free Software Foundation, either version 3 of the License, or      *
  *    (at your option) any later version.                                    *
  *                                                                           *
- *    KLogserver is distributed in the hope that it will be useful,          *
+ *    KLog is distributed in the hope that it will be useful,                *
  *    but WITHOUT ANY WARRANTY; without even the implied warranty of         *
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
  *    GNU General Public License for more details.                           *
  *                                                                           *
  *    You should have received a copy of the GNU General Public License      *
- *    along with KLogServer.  If not, see <https://www.gnu.org/licenses/>.   *
+ *    along with KLog.  If not, see <https://www.gnu.org/licenses/>.         *
  *                                                                           *
  *****************************************************************************/
 
@@ -30,10 +30,12 @@
 #include <QDate>
 #include <QTime>
 #include <QDebug>
+#include "adifforfield.h"
 #include "utilities.h"
 
-class QSO
+class QSO : public QObject
 {
+    Q_OBJECT
 
 public:
     QSO();
@@ -63,9 +65,6 @@ public:
     QTime getTimeOn();
     QDateTime getDateTimeOn();
     bool setDateTimeOn(const QDateTime &_c);
-
-    bool setTimeOff(const QTime &_c);
-    QTime getTimeOff();
     QDateTime getDateTimeOff();
     bool setDateTimeOff(const QDateTime &_c);
 
@@ -78,10 +77,8 @@ public:
     bool setLogId(const int _i);
     int getLogId();
 
-
     bool setBandRX(const QString &_c);
     QString getBandRX();
-
 
     bool setRSTTX(const QString &_c);
     QString getRSTTX();
@@ -193,11 +190,6 @@ public:
     bool setMyVUCCGrids(const QString &_c);
     QString getMyVUCCGrids();
 
-    bool setSRX_String(const QString &_c);
-    QString getSRX_String();
-    bool setSTX_String(const QString &_c);
-    QString getSRTX_String();
-
     // Satellite Tab
     bool setSatName(const QString &_c);
     QString getSatName();
@@ -206,21 +198,58 @@ public:
     bool setKeepSatTab(bool _k);
     bool getKeepSatTab();
 
-    bool add();
+    bool setCQz(const int _i);
+    int getCQz();
+    bool setMyCQz(const int _i);
+    int getMyCQz();
+
+    bool setITUz(const int _i);
+    int getITUz();
+    bool setMyITUz(const int _i);
+    int getMyITUz();
+
+    bool setAddress(const QString &_c);
+    QString getAddress();
+
+    bool setContestId(const QString &_c);
+    QString getContestId();
+    bool setPfx(const QString &_c);
+    QString getPfx();
+    bool setCont(const QString &_c);
+    QString getCont();
+    bool setSRx(const int _c);
+    int getSRx();
+    bool setSTx(const int _c);
+    int getSTx();
+    bool setSRx_string(const QString &_c);
+    QString getSRx_string();
+    bool setSTx_string(const QString &_c);
+    QString getSTx_string();
+    bool setPoints(const int _c);
+    int getPoints();
+    bool setPrecedence(const QString &_c);
+    QString getPrecedence();
+
+    //bool isSame(const QSO &qso);
+    bool isSame(QSO *qso);
+
     QString getADIF();
+
 
 private:
 
+    QString contestId, pfx, continent, srx_string, stx_string, precedence;
+    int srx, stx, points;
 
 
     QString satName, satMode, callsign, stationCallsign, operatorCall, propMode, band, mode, gridsquare, myGridsquare, qth, name, RST_tx, RST_rx;
     int qsoId, logId, dxcc;
+    int cqz, myCQz, ituz, myITUz;
     QString qsl_rcvd, qsl_sent, qslSenVia, qslRecVia, qslVia, qslMsg;
     QDate QSLRDate, QSLSDate, QSLLoTWRDate, QSLLoTWSDate;
-    QDateTime qso_dateTime,qso_dateTime_off;
+    QDateTime qso_dateTime, qso_dateTime_off;
     double freq_tx, freq_rx, pwr_rx, pwr_tx, age;
     QString lotw_qsl_sent, lotw_qsl_rcvd, sota_ref, my_sota_ref, my_rig, my_antenna, vucc_grids, my_vucc_grids;
-    QString srx_string, stx_string;
 
     QString clublog_status;
     QDate clublogDate;
@@ -228,8 +257,9 @@ private:
     QDate eQSLRDate, eQSLSDate;
     QString QRZCom_status;
     QDate QRZComDate;
-    QString comment;
+    QString comment, address;
     bool keepComment, keepOther, keepMyData, keepSat, modifying;
+
 
     QString iota;
 
@@ -256,10 +286,10 @@ private:
    NAME,  NAME_INTL,  NOTES,  NOTES_INTL,  NR_BURSTS,  NR_PINGS,
    OPERATOR,  OWNER_CALLSIGN,
    PFX,  PRECEDENCE,  PROP_MODE,  PUBLIC_KEY,
-   QRZCOM_QSO_UPLOAD_DATE,  QRZCOM_QSO_UPLOAD_STATUS,  QSLMSG,  QSLMSG_INTL,  QSLRDATE,  QSLSDATE,  QSL_RCVD,  QSL_RCVD_VIA,  QSL_SENT,  QSL_SENT_VIA,  QSL_VIA,  QSO_COMPLETE,  QSO_DATE,  QSO_DATE_OFF,  QSO_RANDOM,  QTH,  QTH_INTL,
+   QRZCOM_QSO_UPLOAD_DATE,  QRZCOM_QSO_UPLOAD_STATUS,  QSLMSG,  QSLMSG_INTL,  QSLRDATE,  QSLSDATE,  QSL_RCVD,  QSL_RCVD_VIA,  QSL_SENT,  QSL_SENT_VIA,  QSL_VIA,  QSO_COMPLETE,   QSO_RANDOM,  QTH,  QTH_INTL,
    REGION,  RIG,  RIG_INTL,  RST_RCVD,  RST_SENT,  RX_PWR,
    SAT_MODE,  SAT_NAME,  SFI,  SIG,  SIG_INTL,  SIG_INFO,  SIG_INFO_INTL,  SILENT_KEY,  SKCC,  SOTA_REF,  SRX,  SRX_STRING,  STATE,  STATION_CALLSIGN,  STX,  STX_STRING,  SUBMODE,  SWL,
-   TEN_TEN,  TIME_OFF,  TIME_ON,  TX_PWR,
+   TEN_TEN,   TX_PWR,
    UKSMG,  USACA_COUNTIES,
    VE_PROV,  VUCC_GRIDS,
    WEB

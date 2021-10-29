@@ -25,6 +25,7 @@
 # *****************************************************************************/
 QT -= gui
 QT += core \
+    xml \
     network
 
 VERSION = 0.0.1
@@ -38,6 +39,7 @@ CONFIG -= app_bundle
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        adifforfield.cpp \
         filemanager.cpp \
         locator.cpp \
         main.cpp \
@@ -60,7 +62,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    adifforfield.h \
     filemanager.h \
+    global.h \
     klogdefinitions.h \
     locator.h \
     mainclass.h \

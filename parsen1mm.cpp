@@ -25,62 +25,281 @@
  *****************************************************************************/
 #include "parsen1mm.h"
 
-ParseN1MM::ParseN1MM(){}
+ParseN1MM::ParseN1MM()
+{
+    qso = new QSO();
+}
 
 ParseN1MM::~ParseN1MM(){}
 
 void ParseN1MM::parse(const QByteArray &msg)
 {
      qDebug() << Q_FUNC_INFO << ": " << QString::fromStdString(msg.toStdString());
+     QXmlStreamReader xml(msg);
+     while (!xml.atEnd()) {
+         //qDebug() << Q_FUNC_INFO << ": In the while";
+         xml.readNext();
+         //qDebug() << Q_FUNC_INFO << ": xml.name: " << xml.name();
+         if (xml.name() == "contactinfo")
+         {
+            parseXMLContact (xml); ;
+            return;
+         }
+     }
+
+     if (xml.hasError()) {
+         //qDebug() << xml.errorString() << xml.characterOffset();
+     }
 }
+
+void ParseN1MM::parseXMLContact(QXmlStreamReader &_xml)
+{
+    //qDebug() << Q_FUNC_INFO;
+
+    qso->clear ();
+    while (!_xml.atEnd()) {
+        //qDebug() << Q_FUNC_INFO << ": In the while";
+        _xml.readNext();
+        if (_xml.name () == "app")
+        {
+            if (_xml.readElementText () != "N1MM")
+            {
+                //qDebug() << Q_FUNC_INFO << "Wrong APP!";
+                return;
+            }
+        }
+        else if (_xml.name () == "")
+        {}
+        else if (_xml.name () == "contestname")
+        {
+            qso->setContestId("CQ-WW-SSB");
+        }
+        else if (_xml.name () == "contestnr")
+        {
+            //(_xml.readElementText ())
+        }
+        else if (_xml.name () == "timestamp")
+        {   // TODO: import date / time
+            // YYYY-MM-DD hh:mm:ss
+            QString aux = _xml.readElementText ();
+            //qDebug() << Q_FUNC_INFO << "timeStamp: " << aux;
+
+            QDateTime dateTime = QDateTime::fromString (aux, "yyyy-MM-dd hh:mm:ss");
+            if (dateTime.isValid ())
+            {
+                //qDebug() << Q_FUNC_INFO << " - QDatetime not valid";
+                qso->setDateTimeOn (dateTime);
+            }
+            else
+            {
+                //qDebug() << Q_FUNC_INFO << " - QDatetime not valid";
+            }
+        }
+        else if (_xml.name () == "mycall")
+        {
+            qso->setStationCallsign (_xml.readElementText ());
+        }
+        else if (_xml.name () == "band")
+        {   //TODO:  14, 28,...
+            QString aux = _xml.readElementText ();
+
+            if (aux == "28")
+            {
+                qso->setBand ("10M");
+            }
+            else if (aux == "21")
+            {
+                qso->setBand ("15M");
+            }
+            else if (aux == "14")
+            {
+                qso->setBand ("20M");
+            }
+            else if (aux == "7")
+            {
+                qso->setBand ("40M");
+            }
+            else if (aux == "3,5")
+            {
+                qso->setBand ("80M");
+            }
+            else if (aux == "1,8")
+            {
+                qso->setBand ("160M");
+            }
+        }
+        else if (_xml.name () == "rxfreq")
+        {
+            qso->setFreqRX ((_xml.readElementText ().toDouble ())/100000);
+        }
+        else if (_xml.name () == "txfreq")
+        {
+            qso->setFreqTX ((_xml.readElementText ().toDouble ())/100000);
+        }
+        else if (_xml.name () == "operator")
+        {
+            qso->setOperatorCallsign (_xml.readElementText ());
+        }
+        else if (_xml.name () == "mode")
+        {
+            qso->setMode (_xml.readElementText ());
+        }
+        else if (_xml.name () == "call")
+        {
+            qso->setCall (_xml.readElementText ());
+        }
+        else if (_xml.name () == "countryprefix")
+        {
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "wpxprefix")
+        {
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "stationprefix")
+        {
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "continent")
+        {
+            //qso->setContinent(_xml.readElementText ());
+        }
+        else if (_xml.name () == "snt")
+        {
+            qso->setRSTTX (_xml.readElementText ());
+        }
+        else if (_xml.name () == "sntnr")
+        {
+            qso->setSTx ((_xml.readElementText ()).toInt ());
+        }
+        else if (_xml.name () == "rcv")
+        {
+            qso->setRSTRX (_xml.readElementText ());
+        }
+        else if (_xml.name () == "rcvnr")
+        {
+           //qso->setSRx ((_xml.readElementText ()).toInt ());
+        }
+        else if (_xml.name () == "gridsquare")
+        {
+            qso->setGridSquare (_xml.readElementText ());
+        }
+        else if (_xml.name () == "exchange1")
+        {
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "section")
+        {
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "comment")
+        {
+            qso->setComment (_xml.readElementText ());
+        }
+        else if (_xml.name () == "qth")
+        {
+            qso->setQTH (_xml.readElementText ());
+        }
+        else if (_xml.name () == "name")
+        {
+            qso->setName (_xml.readElementText ());
+        }
+        else if (_xml.name () == "power")
+        {
+            qso->setTXPwr ((_xml.readElementText ()).toDouble ());
+        }
+        else if (_xml.name () == "misctext")
+        {
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "zone")
+        {
+            qso->setCQz ((_xml.readElementText ()).toInt ());
+            qso->setSRx ((_xml.readElementText ()).toInt ());
+        }
+        else if (_xml.name () == "prec")
+        {
+            qso->setPrecedence (_xml.readElementText ());
+        }
+        else if (_xml.name () == "ck")
+        {
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "ismultiplier1")
+        {
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "ismultiplier2")
+        {
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "ismultiplier3")
+        {
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "points")
+        {
+            qso->setPoints((_xml.readElementText ()).toInt ());
+
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "radionr")
+        {
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "run1run2")
+        {
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "RoverLocation")
+        {
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "RadioInterfaced")
+        {
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "NetworkedCompNr")
+        {
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "IsOriginal")
+        {
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "NetBiosName")
+        {
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "ID")
+        {
+            //qso-> (_xml.readElementText ());
+        }else if (_xml.name () == "IsRunQSO")
+        {
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "StationName")
+        { //Not ADIF
+            //qso-> (_xml.readElementText ());
+        }
+        else if (_xml.name () == "IsClaimedQso")
+        {
+            //qso-> (_xml.readElementText ());
+        }else if (_xml.name () == "contactinfo")
+        {
+            //qso-> (_xml.readElementText ());
+        }
+        else
+        {
+            //qDebug() << Q_FUNC_INFO << ": Unknown name: " << _xml.name ();
+        }
+        //qDebug() << Q_FUNC_INFO << ": name: " << _xml.name ();
+        //qDebug() << Q_FUNC_INFO << ": text: " << _xml.text ();
+        //qDebug() << Q_FUNC_INFO << ": readElementtext: " << _xml.readElementText ();
+    }
+    emit logged_qso (qso);
+}
+
 /*
-XML received
-<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n
-<contactinfo>\r\n\t
-    <app>N1MM</app>\r\n\t
-    <contestname>CQWWSSB</contestname>\r\n\t
-    <contestnr>32</contestnr>\r\n\t
-    <timestamp>2021-10-25 19:06:16</timestamp>\r\n\t
-    <mycall>EA4K</mycall>\r\n\t
-    <band>14</band>\r\n\t
-    <rxfreq>1420000</rxfreq>\r\n\t
-    <txfreq>1420000</txfreq>\r\n\t
-    <operator>EA4K</operator>\r\n\t
-    <mode>USB</mode>\r\n\t
-    <call>EA4TV</call>\r\n\t
-    <countryprefix>EA</countryprefix>\r\n\t
-    <wpxprefix>EA4</wpxprefix>\r\n\t
-    <stationprefix>EA4K</stationprefix>\r\n\t
-    <continent>EU</continent>\r\n\t
-    <snt>59</snt>\r\n\t
-    <sntnr>3</sntnr>\r\n\t
-    <rcv>59</rcv>\r\n\t
-    <rcvnr>0</rcvnr>\r\n\t
-    <gridsquare></gridsquare>\r\n\t
-    <exchange1></exchange1>\r\n\t
-    <section></section>\r\n\t
-    <comment></comment>\r\n\t
-    <qth></qth>\r\n\t
-    <name></name>\r\n\t
-    <power></power>\r\n\t
-    <misctext></misctext>\r\n\t
-    <zone>14</zone>\r\n\t
-    <prec></prec>\r\n\t
-    <ck>0</ck>\r\n\t
-    <ismultiplier1>0</ismultiplier1>\r\n\t
-    <ismultiplier2>0</ismultiplier2>\r\n\t
-    <ismultiplier3>0</ismultiplier3>\r\n\t
-    <points>0</points>\r\n\t
-    <radionr>1</radionr>\r\n\t
-    <run1run2>1</run1run2>\r\n\t
-    <RoverLocation></RoverLocation>\r\n\t
-    <RadioInterfaced>0</RadioInterfaced>\r\n\t
-    <NetworkedCompNr>0</NetworkedCompNr>\r\n\t
-    <IsOriginal>True</IsOriginal>\r\n\t
-    <NetBiosName>DESKTOP-B4L8KB8</NetBiosName>\r\n\t
-    <IsRunQSO>0</IsRunQSO>\r\n\t
-    <StationName>DESKTOP-B4L8KB8</StationName>\r\n\t
-    <ID>04abc2ae70704bca9213789eaa5b62e9</ID>\r\n\t
-    <IsClaimedQso>1</IsClaimedQso>\r\n
-</contactinfo>
+
 */

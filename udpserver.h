@@ -34,6 +34,8 @@
 #include "utilities.h"
 #include "parsen1mm.h"
 #include "parsewsjtx.h"
+#include "filemanager.h"
+#include "qso.h"
 
 class UDPServer : public QObject
 {
@@ -66,6 +68,7 @@ private:
     int port;
     bool logging, realtime;
     bool haveNetworkInterface;
+    QSO *lastQso;
 
     Utilities *util;
     ParseWSJTX *parseWSJTX;
@@ -81,12 +84,11 @@ private:
 #endif
 
 signals:
-
+    //void logged_qso (QSO *_qso);
 
 private slots:
     void slotReadPendingDatagrams();
-
-
+    void slotLoggedQSO(QSO *_qso);
 };
 
 #endif // UDPSERVER_H

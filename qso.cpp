@@ -7,33 +7,30 @@
  ***************************************************************************/
 
 /*****************************************************************************
- * This file is part of KLogServer                                           *
+ * This file is part of KLog.                                                *
  *                                                                           *
- *    KLogsServer is free software: you can redistribute it and/or modify    *
+ *    KLog is free software: you can redistribute it and/or modify           *
  *    it under the terms of the GNU General Public License as published by   *
  *    the Free Software Foundation, either version 3 of the License, or      *
  *    (at your option) any later version.                                    *
  *                                                                           *
- *    KLogserver is distributed in the hope that it will be useful,          *
+ *    KLog is distributed in the hope that it will be useful,                *
  *    but WITHOUT ANY WARRANTY; without even the implied warranty of         *
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the          *
  *    GNU General Public License for more details.                           *
  *                                                                           *
  *    You should have received a copy of the GNU General Public License      *
- *    along with KLogServer.  If not, see <https://www.gnu.org/licenses/>.   *
+ *    along with KLog.  If not, see <https://www.gnu.org/licenses/>.         *
  *                                                                           *
  *****************************************************************************/
-
 #include "qso.h"
 
 QSO::QSO()
 {
-    clear();
 }
 
 QSO::~QSO()
 {
-    clear();
 }
 
 void QSO::clear()
@@ -78,12 +75,8 @@ void QSO::clear()
     vucc_grids= QString();
     qth = QString();
     name = QString();
-    srx_string = QString();
-    stx_string = QString();
     freq_tx = -1.0;
     freq_rx = -1.0;
-    pwr_rx = 0.0;
-    pwr_tx = 0.0;
     age = -1.0;
     sota_ref = QString();
     pwr_rx = 0.0;
@@ -92,6 +85,7 @@ void QSO::clear()
     dxcc = -1;
     propMode = QString();
     iota = QString();
+    address.clear();
 
     QSLLoTWRDate = QDate();
     QSLLoTWSDate = QDate();
@@ -100,9 +94,23 @@ void QSO::clear()
     lotwUpdating = false;
     realTime = false;
 
+    contestId = QString();
+    pfx = QString();
+    continent = QString();
+    srx_string = QString();
+    stx_string = QString();
+    precedence = QString();
+    srx = 0;
+    stx = 0;
+    points = 0;
+
     comment = QString();
     satName = QString();
     satMode = QString();
+    cqz = 0;
+    myCQz = 0;
+    ituz = 0;
+    myITUz = 0;
     keepComment = false;
     keepMyData = false;
     keepOther = false;
@@ -149,6 +157,226 @@ int QSO::getQSOid()
     return qsoId;
 }
 
+bool QSO::setContestId(const QString &_c)
+{
+   contestId = _c;
+   return true;
+}
+
+QString QSO::getContestId()
+{
+    return contestId;
+}
+
+bool QSO::setPfx(const QString &_c)
+{
+    pfx = _c;
+    return true;
+}
+
+QString QSO::getPfx()
+{
+    return pfx;
+}
+
+bool QSO::setCont(const QString &_c)
+{
+    if (!util->isValidContinent (_c))
+    {
+        return false;
+    }
+    continent = _c;
+    return true;
+}
+
+QString QSO::getCont()
+{
+    return continent;
+}
+
+bool QSO::setSRx(const int _c)
+{
+    srx = _c;
+    return true;
+}
+
+int QSO::getSRx()
+{
+    return srx;
+}
+
+bool QSO::setSTx(const int _c)
+{
+    stx = _c;
+    return true;
+}
+
+int QSO::getSTx()
+{
+    return stx;
+}
+
+bool QSO::setSRx_string(const QString &_c)
+{
+    srx_string = _c;
+    return true;
+}
+
+QString QSO::getSRx_string()
+{
+    return srx_string;
+}
+
+bool QSO::setSTx_string(const QString &_c)
+{
+    stx_string = _c;
+    return true;
+}
+
+QString QSO::getSTx_string()
+{
+    return stx_string;
+}
+
+bool QSO::setPoints(const int _c)
+{
+    points = _c;
+    return true;
+}
+
+int QSO::getPoints()
+{
+    return points;
+}
+
+bool QSO::setPrecedence(const QString &_c)
+{
+    precedence = _c;
+    return true;
+}
+
+QString QSO::getPrecedence()
+{
+    return precedence;
+}
+
+bool QSO::isSame(QSO *qso)
+{
+    qDebug() << Q_FUNC_INFO << callsign << "/" << qso->callsign;
+    qDebug() << Q_FUNC_INFO << qso_dateTime.toString ("yyyy-MM-dd hh:mm:ss") << "/" << qso->qso_dateTime.toString("yyyy-MM-dd hh:mm:ss");
+    qDebug() << Q_FUNC_INFO << band << "/" << qso->band;
+    qDebug() << Q_FUNC_INFO << ": Different mode";
+
+    if (callsign != qso->callsign )
+    {
+        qDebug() << Q_FUNC_INFO << ": Different call";
+        return false;
+    }
+    if (qso_dateTime != qso->qso_dateTime)
+    {
+       qDebug() << Q_FUNC_INFO << ": Different qdatetime";
+        return false;
+    }
+    if (band != qso->band)
+    {
+       qDebug() << Q_FUNC_INFO << ": Different band";
+        return false;
+    }
+    if (mode != qso->mode)
+    {
+        qDebug() << Q_FUNC_INFO << ": Different mode";
+        return false;
+    }
+    qDebug() << Q_FUNC_INFO << ": ALL THE SAME";
+    return true;
+}
+
+QString QSO::getADIF()
+{
+    QString adif;
+    adif.clear ();
+    ADIFForField adifForField;
+
+    adif = adifForField.getADIFForQSODate(util->getDateTimeSQLiteStringFromDateTime (getDateTimeOn ()));
+    adif = adif + adifForField.getADIFForQSODateOff(util->getDateTimeSQLiteStringFromDateTime (getDateTimeOff ()));
+    adif = adif + adifForField.getADIFForCall(getCall ());
+    adif = adif + adifForField.getADIFForRSTSent(getRSTTX ());
+    adif = adif + adifForField.getADIFForRSTRcvd(getRSTRX ());
+    adif = adif + adifForField.getADIFForBand(getBand ());
+    adif = adif + adifForField.getADIFForMode(getMode ());
+    //adif = adif + adifForField.getADIFForSubMode();
+    adif = adif + adifForField.getADIFForCQz(QString::number(getCQz ()));
+    adif = adif + adifForField.getADIFForITUz(QString::number(getITUz ()));
+    adif = adif + adifForField.getADIFForDXCC(QString::number(getDXCC ()));
+    adif = adif + adifForField.getADIFForAddress(getAddress ());
+    adif = adif + adifForField.getADIFForAge(QString::number(getAge ()));
+    adif = adif + adifForField.getADIFForMy_CQz(QString::number(getMyCQz ()));
+    adif = adif + adifForField.getADIFForMy_Ituz(QString::number(getMyITUz ()));
+    adif = adif + adifForField.getADIFForName(getName ());
+    adif = adif + adifForField.getADIFForOperator(getOperatorCallsign ());
+    adif = adif + adifForField.getADIFForRX_Pwr(QString::number(getRXPwr ()));
+    adif = adif + adifForField.getADIFForTX_Pwr(QString::number(getTXPwr ()));
+
+    adif = adif + adifForField.getADIFForContestId(getContestId ());
+    adif = adif + adifForField.getADIFForPfx(getPfx ());
+    adif = adif + adifForField.getADIFForCont(getCont ());
+    adif = adif + adifForField.getADIFForSRx_String(getSRx_string ());
+    adif = adif + adifForField.getADIFForSTx_String(getSTx_string ());
+    adif = adif + adifForField.getADIFForSRx(QString::number(getSRx ()));
+    adif = adif + adifForField.getADIFForSTx(QString::number(getSTx ()));
+    adif = adif + adifForField.getADIFForQTH(getQTH ());
+    adif = adif + adifForField.getADIFForPoints(QString::number(getPoints()));
+    adif = adif + adifForField.getADIFForPrecedence(getPrecedence ());
+
+    adif = adif + adifForField.getADIFForGridSquare(getGridSquare ());
+    adif = adif + adifForField.getADIFForMyGridSquare(getMyGridSquare ());
+
+    adif = adif + adifForField.getADIFForComment(getComment ());
+    adif = adif + adifForField.getADIFForFreq(QString::number(getFreqTX ()));
+    adif = adif + adifForField.getADIFForFreq_rx (QString::number(getFreqRX ()));
+    adif = adif + adifForField.getADIFForStationCallsign(getStationCallsign ());
+
+ /*
+    adif = adif + adifForField.getADIFForCNTY(const QString &_data);
+
+    adif = adif + adifForField.getADIFForA_Index(const QString &_data);
+    adif = adif + adifForField.getADIFForAnt_az(const QString &_data);
+    adif = adif + adifForField.getADIFForAnt_el(const QString &_data);
+    adif = adif + adifForField.getADIFForAnt_path(const QString &_data);
+    adif = adif + adifForField.getADIFForARRL_sect(const QString &_data);
+
+    adif = adif + adifForField.getADIFForBandRX(const QString &_data);
+
+    adif = adif + adifForField.getADIFForQSLRDate(const QString &_data);
+    adif = adif + adifForField.getADIFForQSLSDate(const QString &_data);
+    adif = adif + adifForField.getADIFForQSLRcvd(const QString &_data);
+    adif = adif + adifForField.getADIFForQSLSent(const QString &_data);
+
+    adif = adif + adifForField.getADIFForLoTWRDate(const QString &_data);
+    adif = adif + adifForField.getADIFForLoTWSDate(const QString &_data);
+    adif = adif + adifForField.getADIFForLoTWQSLRcvd(const QString &_data);
+    adif = adif + adifForField.getADIFForLoTWQSLSent(const QString &_data);
+
+    adif = adif + adifForField.getADIFForClubLogQSOUploadDate(const QString &_data);
+    adif = adif + adifForField.getADIFForClubLogQSOUploadStatus(const QString &_data);
+    adif = adif + adifForField.getADIFForHRDLogQSOUploadDate(const QString &_data);
+    adif = adif + adifForField.getADIFForHRDLogQSOUploadStatus(const QString &_data);
+    adif = adif + adifForField.getADIFForQRZCOMQSOUploadDate(const QString &_data);
+    adif = adif + adifForField.getADIFForQRZCOMQSOUploadStatus(const QString &_data);
+
+    adif = adif + adifForField.getADIFForEQSL_QSLRDate(const QString &_data);
+    adif = adif + adifForField.getADIFForEQSL_QSLSDate(const QString &_data);
+    adif = adif + adifForField.getADIFForEQSL_QSLRCVD(const QString &_data);
+    adif = adif + adifForField.getADIFForEQSL_QSLSent(const QString &_data);
+
+    adif = adif + adifForField.getADIFForAward_Submitted(const QString &_data);
+    adif = adif + adifForField.getADIFForAward_Granted(const QString &_data);
+
+*/
+
+    return adif;
+}
+
 bool QSO::setLogId(const int _i)
 {
     if (_i >0)
@@ -169,15 +397,15 @@ int QSO::getLogId()
 
 bool QSO::isValid()
 {
-   //qDebug() << "QSO::isValid: " << callsign << Qt::endl;
+   //qDebug() << "QSO::isValid: " << callsign << QT_ENDL;
     if ( (callsign.length()>0))
     {
-       //qDebug() << "QSO::isValid: TRUE" << Qt::endl;
+       //qDebug() << "QSO::isValid: TRUE" << QT_ENDL;
         return true;
     }
     else
     {
-       //qDebug() << "QSO::isValid: FALSE" << Qt::endl;
+       //qDebug() << "QSO::isValid: FALSE" << QT_ENDL;
         return false;
     }
 
@@ -185,15 +413,16 @@ bool QSO::isValid()
 
 bool QSO::setCall(const QString &_c)
 {
-   //qDebug() << "QSO::setCall: " << _c << Qt::endl;
+    //qDebug() << "QSO::setCall: " << _c << QT_ENDL;
     if (util->isValidCall(_c))
     {
-       //qDebug() << "QSO::setCall: Valid Call"  << Qt::endl;
+        //qDebug() << "QSO::setCall: Valid Call"  << QT_ENDL;
         callsign = _c;
         return true;
     }
-    else {
-       //qDebug() << "QSO::setCall: NOT valid Call"  << Qt::endl;
+    else
+    {
+        //qDebug() << "QSO::setCall: NOT valid Call"  << QT_ENDL;
         return false;
     }
 }
@@ -205,7 +434,7 @@ QString QSO::getCall()
 
 bool QSO::setBand(const QString &_c)
 {
-   //qDebug() << "QSO::setBand: "<< _c << Qt::endl;
+   //qDebug() << "QSO::setBand: "<< _c << QT_ENDL;
     if (_c.length()>0)
     {
         band = _c;
@@ -225,7 +454,7 @@ QString QSO::getBand()
 
 bool QSO::setBandRX(const QString &_c)
 {
-   //qDebug() << "QSO::setBandRX: "<< _c << Qt::endl;
+   //qDebug() << "QSO::setBandRX: "<< _c << QT_ENDL;
     if (_c.length()>0)
     {
         band = _c;
@@ -265,16 +494,16 @@ QString QSO::getMode()
 
 bool QSO::setDate(const QDate &_c)
 {
-   //qDebug() << "QSO::setDate: " << util->getDateSQLiteStringFromDate(_c) << Qt::endl;
+   //qDebug() << "QSO::setDate: " << util->getDateSQLiteStringFromDate(_c) << QT_ENDL;
     if (_c.isValid())
     {
-       //qDebug() << "QSO::setDate: VALID" << Qt::endl;
+       //qDebug() << "QSO::setDate: VALID" << QT_ENDL;
         qso_dateTime.setDate(_c);
         return true;
     }
     else
     {
-       //qDebug() << "QSO::setDate: NOT VALID" << Qt::endl;
+       //qDebug() << "QSO::setDate: NOT VALID" << QT_ENDL;
         qso_dateTime.setDate(QDate());
         return false;
     }
@@ -287,16 +516,16 @@ QDate QSO::getDate()
 
 bool QSO::setTimeOn(const QTime &_c)
 {
-   //qDebug() << "QSO::setQSLTime: " << _c.toString("mmhhss") << Qt::endl;
+   //qDebug() << "QSO::setQSLTime: " << _c.toString("mmhhss") << QT_ENDL;
     if (_c.isValid())
     {
-       //qDebug() << "QSO::setQSLTime: VALID" << Qt::endl;
+       //qDebug() << "QSO::setQSLTime: VALID" << QT_ENDL;
         qso_dateTime.setTime(_c);
         return true;
     }
     else
     {
-       //qDebug() << "QSO::setQSLTime: NOT VALID" << Qt::endl;
+       //qDebug() << "QSO::setQSLTime: NOT VALID" << QT_ENDL;
         qso_dateTime.setTime(QTime());
         return false;
     }
@@ -314,37 +543,18 @@ QDateTime QSO::getDateTimeOn()
 
 bool QSO::setDateTimeOn(const QDateTime &_c)
 {
+    //qDebug() << Q_FUNC_INFO;
     if (_c.isValid())
     {
+        //qDebug() << Q_FUNC_INFO << " - Valid Date";
         qso_dateTime = _c;
         return true;
     }
     else
     {
+        //qDebug() << Q_FUNC_INFO << " - Not valid Date";
         return false;
     }
-}
-
-bool QSO::setTimeOff(const QTime &_c)
-{
-   //qDebug() << "QSO::setQSLTime: " << _c.toString("mmhhss") << Qt::endl;
-    if (_c.isValid())
-    {
-       //qDebug() << "QSO::setQSLTime: VALID" << Qt::endl;
-        qso_dateTime_off.setTime(_c);
-        return true;
-    }
-    else
-    {
-       //qDebug() << "QSO::setQSLTime: NOT VALID" << Qt::endl;
-        qso_dateTime_off.setTime(QTime());
-        return false;
-    }
-}
-
-QTime QSO::getTimeOff()
-{
-    return qso_dateTime_off.time();
 }
 
 QDateTime QSO::getDateTimeOff()
@@ -354,13 +564,16 @@ QDateTime QSO::getDateTimeOff()
 
 bool QSO::setDateTimeOff(const QDateTime &_c)
 {
+    //qDebug() << Q_FUNC_INFO;
     if (_c.isValid())
     {
+        //qDebug() << Q_FUNC_INFO << " - Valid Date";
         qso_dateTime_off = _c;
         return true;
     }
     else
     {
+        //qDebug() << Q_FUNC_INFO << " - Not valid Date";
         return false;
     }
 }
@@ -568,24 +781,29 @@ bool QSO::setLoTWQSL_SENT(const QString &_c)
         lotw_qsl_sent = _c;
         return true;
     }
-    else {
+    else
+    {
         return false;
     }
 }
 
-QString QSO::getLoTWQSL_SENT() {
+QString QSO::getLoTWQSL_SENT()
+{
     return lotw_qsl_sent;
 }
 
 bool QSO::setLoTWQSLSDate(const QDate &_c)
 {
+    //qDebug() << Q_FUNC_INFO;
     if (_c.isValid())
     {
+        //qDebug() << Q_FUNC_INFO << " - valid";
         QSLLoTWSDate = _c;
         return true;
     }
     else
     {
+        //qDebug() << Q_FUNC_INFO << " - NOT valid";
         QSLLoTWSDate = QDate();
         return false;
     }
@@ -598,16 +816,16 @@ QDate QSO::getLoTWQSLSDate()
 
 bool QSO::setLoTWQSL_RCVD(const QString &_c)
 {
-    //qDebug() << "QSO::setLoTWQSL_RCVD: " << _c  << Qt::endl;
+    //qDebug() << "QSO::setLoTWQSL_RCVD: " << _c  << QT_ENDL;
     if (util->isValidQSL_Rcvd(_c))
     {
-        //qDebug() << "QSO::setLoTWQSL_RCVD: VALID " << Qt::endl;
+        //qDebug() << "QSO::setLoTWQSL_RCVD: VALID " << QT_ENDL;
         lotw_qsl_rcvd = _c;
         return true;
     }
     else
     {
-        //qDebug() << "QSO::setLoTWQSL_RCVD: NOT valid " << Qt::endl;
+        //qDebug() << "QSO::setLoTWQSL_RCVD: NOT valid " << QT_ENDL;
         return false;
     }
 }
@@ -619,16 +837,16 @@ QString QSO::getLoTWQSL_RCVD()
 
 bool QSO::setLoTWQSLRDate(const QDate &_c)
 {
-    //qDebug() << "QSO::setLoTWQSLRDate: " << _c.toString("yyyy-MM-dd") << Qt::endl;
+    //qDebug() << "QSO::setLoTWQSLRDate: " << _c.toString("yyyy-MM-dd") << QT_ENDL;
     if (_c.isValid())
     {
-        //qDebug() << "QSO::setLoTWQSLRDate: TRUE" << Qt::endl;
+        //qDebug() << "QSO::setLoTWQSLRDate: TRUE" << QT_ENDL;
         QSLLoTWRDate = _c;
         return true;
     }
     else
     {
-        //qDebug() << "QSO::setLoTWQSLRDate: FALSE" << Qt::endl;
+        //qDebug() << "QSO::setLoTWQSLRDate: FALSE" << QT_ENDL;
         QSLLoTWRDate = QDate();
         return false;
     }
@@ -1193,25 +1411,6 @@ bool setKeepSatTab(bool _k);
 
 bool getKeepSatTab();
 
-bool QSO::setSRX_String(const QString &_c)
-{
-    srx_string =_c;
-}
-QString QSO::getSRX_String()
-{
-    return srx_string;
-}
-bool QSO::setSTX_String(const QString &_c)
-{
-    srx_string = _c;
-}
-
-QString QSO::getSRTX_String()
-{
-    return stx_string;
-}
-
-
 bool QSO::setSatName(const QString &_c)
 {
     if (_c.length()>0)
@@ -1261,19 +1460,106 @@ bool QSO::getKeepSatTab()
     return keepSat;
 }
 
+bool QSO::setCQz(const int _i)
+{
+    if (util->isValidCQ (_i))
+    {
+        cqz = _i;
+        return true;
+    }
+    else
+    {
+        cqz = 0;
+    }
+    return false;
+}
+
+int QSO::getCQz()
+{
+    return cqz;
+}
+
+bool QSO::setMyCQz(const int _i)
+{
+    if (util->isValidCQ (_i))
+    {
+        myCQz = _i;
+        return true;
+    }
+    else
+    {
+        myCQz = 0;
+    }
+    return false;
+}
+
+int QSO::getMyCQz()
+{
+    return myCQz;
+}
+
+bool QSO::setITUz(const int _i)
+{
+    if (util->isValidITU (_i))
+    {
+        ituz = _i;
+        return true;
+    }
+    else
+    {
+        ituz = 0;
+    }
+    return false;
+}
+
+int QSO::getITUz()
+{
+    return ituz;
+}
+
+bool QSO::setMyITUz(const int _i)
+{
+    if (util->isValidITU (_i))
+    {
+        myITUz = _i;
+        return true;
+    }
+    else
+    {
+        myITUz = 0;
+    }
+    return false;
+}
+
+int QSO::getMyITUz()
+{
+    return myITUz;
+}
+
+bool QSO::setAddress(const QString &_c)
+{
+    address = _c;
+    return true;
+}
+
+QString QSO::getAddress()
+{
+    return address;
+}
+
 // SET DATA
 bool QSO::setData(const QString &_adifPair)
 {
-    //qDebug() << "QSO::setData: " << _adifPair << Qt::endl;
+    //qDebug() << "QSO::setData: " << _adifPair << QT_ENDL;
     QStringList d;
     d.clear();
     d << util->getValidADIFFieldAndData(_adifPair);
     if (d.length()!=2)
     {
-        //qDebug() << "QSO::setData: NOT VALID ADIF: " << _adifPair << Qt::endl;
+        //qDebug() << "QSO::setData: NOT VALID ADIF: " << _adifPair << QT_ENDL;
         return false;
     }
-   //qDebug() << "QSO::setData: " << d.at(0) << "/" << d.at(1) << Qt::endl;
+    //qDebug() << "QSO::setData: " << d.at(0) << "/" << d.at(1) << QT_ENDL;
 
     QString field = d.at(0).toUpper();
     QString data = d.at(1);
@@ -1296,7 +1582,7 @@ bool QSO::setData(const QString &_adifPair)
     }
     else if (field == "QSO_DATE")
     {
-       //qDebug() << "QSO::setData: QSO_DATE: " << data  << Qt::endl;
+       //qDebug() << "QSO::setData: QSO_DATE: " << data  << QT_ENDL;
         setDate(util->getDateFromADIFDateString(data));
     }
     else if (field == "FREQ")
@@ -1353,122 +1639,22 @@ bool QSO::setData(const QString &_adifPair)
     }
     else if (field == "APP_LOTW_RXQSL")
     {
-        //qDebug() << "QSO::setData: APP_LOTW_RXQSL: " << data  << Qt::endl;
+        //qDebug() << "QSO::setData: APP_LOTW_RXQSL: " << data  << QT_ENDL;
         setLoTWQSL_RCVD("Y");
         setLoTWQSLRDate(util->getDateFromLoTWQSLDateString(data));
     }
+    else if (field == "APP_LOTW_RXQSO")
+    {
+        //qDebug() << "QSO::setData: APP_LOTW_RXQSO: " << data  << QT_ENDL;
+        setLoTWQSL_SENT("Y");
+        setLoTWQSLSDate(util->getDateFromLoTWQSLDateString(data));
+    }
+    else if (field == "APP_LOTW_QSO_TIMESTAMP")
+    {
+        //qDebug() << "QSO::setData: APP_LoTW_QSO_TIMESTAMP: " << data  << QT_ENDL;
+        setLoTWQSL_SENT("Y");
+        setLoTWQSLSDate(util->getDateFromLoTWQSLDateString(data));
+    }
 
     return true;
-}
-
-QString QSO::getADIF()
-{
-    QString adifRecord;
-
-    if (callsign.length()>0)
-    {
-        adifRecord = "<CALL:" + QString::number(callsign.length()) + ">" + callsign + " ";
-    }
-    else
-    {
-        return QString();
-    }
-
-    if (mode.length()>0)
-    {
-        adifRecord = adifRecord + "<MODE:" + QString::number(mode.length()) + ">" + mode + " ";
-    }
-    else
-    {
-        return QString();
-    }
-
-    if (band.length()>0)
-    {
-        adifRecord = adifRecord + "<BAND:" + QString::number(band.length()) + ">" + band + " ";
-    }
-
-    if (freq_tx>0.0)
-    {
-        adifRecord = adifRecord + "<FREQ:" + QString::number(freq_tx>0.0) + ">" +  QString::number(freq_tx) + " ";
-    }
-
-    if (gridsquare.length()>1)
-    {
-        adifRecord = adifRecord + "<GRIDSQUARE:" + QString::number(gridsquare.length()) + ">" +  gridsquare + " ";
-    }
-
-    if (myGridsquare.length()>1)
-    {
-        adifRecord = adifRecord + "<MY_GRIDSQUARE:" + QString::number(myGridsquare.length()) + ">" +  myGridsquare + " ";
-    }
-
-    if (RST_tx.length()>0)
-    {
-        adifRecord = adifRecord + "<RST_SENT:" + QString::number(RST_tx.length()) + ">" +  RST_tx + " ";
-    }
-
-    if (RST_rx.length()>0)
-    {
-        adifRecord = adifRecord + "<RST_RCVD:" + QString::number(RST_rx.length()) + ">" +  RST_rx + " ";
-    }
-
-    if (comment.length()>0)
-    {
-        adifRecord = adifRecord + "<COMMENT:" + QString::number(comment.length()) + ">" +  comment + " ";
-    }
-
-    if (stationCallsign.length()>0)
-    {
-        adifRecord = adifRecord + "<STATION_CALLSIGN:" + QString::number(stationCallsign.length()) + ">" +  stationCallsign + " ";
-    }
-
-    if (operatorCall.length()>0)
-    {
-        adifRecord = adifRecord + "<OPERATOR:" + QString::number(operatorCall.length()) + ">" +  operatorCall + " ";
-    }
-
-    if (qso_dateTime.date().isValid())
-    {
-        adifRecord = adifRecord + "<QSO_DATE:" + QString::number(qso_dateTime.date().toString("yyyyMMdd").length()) + ">" +  qso_dateTime.date().toString("yyyyMMdd") + " ";
-
-    }
-
-    if (qso_dateTime.time().isValid())
-    {
-        adifRecord = adifRecord + "<TIME_ON:" + QString::number(qso_dateTime.time().toString("hhmm").length()) + ">" +  qso_dateTime.time().toString("hhmm") + " ";
-    }
-
-    if (qso_dateTime_off.date().isValid())
-    {
-        adifRecord = adifRecord + "<QSO_DATE_OFF:" + QString::number(qso_dateTime_off.date().toString("yyyyMMdd").length()) + ">" +  qso_dateTime_off.date().toString("yyyyMMdd") + " ";
-    }
-
-    if (qso_dateTime_off.time().isValid())
-    {
-        adifRecord = adifRecord + "<TIME_OFF:" + QString::number(qso_dateTime_off.time().toString("hhmm").length()) + ">" +  qso_dateTime_off.time().toString("hhmm") + " ";
-
-    }
-
-    if (pwr_tx>0)
-    {
-        adifRecord = adifRecord + "<TX_PWR:" + QString::number(QString::number(pwr_tx).length()) + ">" +  QString::number(pwr_tx) + " ";
-    }
-
-    if (pwr_rx>0)
-    {
-        adifRecord = adifRecord + "<RX_PWR:" + QString::number(QString::number(pwr_rx).length()) + ">" +  QString::number(pwr_rx) + " ";
-    }
-
-    if (srx_string.length()>0)
-    {
-        adifRecord = adifRecord + "<SRX_STRING:" + QString::number(srx_string.length()) + ">" +  srx_string + " ";
-    }
-
-    if (stx_string.length()>0)
-    {
-        adifRecord = adifRecord + "<STX_STRING:" + QString::number(stx_string.length()) + ">" +  stx_string + " ";
-    }
-
-    return adifRecord;
 }

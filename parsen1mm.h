@@ -26,7 +26,9 @@
 #ifndef PARSEN1MM_H
 #define PARSEN1MM_H
 #include <QObject>
+#include <QXmlStreamReader>
 #include <QtDebug>
+#include "qso.h"
 
 class ParseN1MM  : public QObject
 {
@@ -36,6 +38,12 @@ public:
     ParseN1MM();
     ~ParseN1MM();
     void parse(const QByteArray &msg);
+
+private:
+    void parseXMLContact(QXmlStreamReader &_xml);
+    QSO *qso;
+signals:
+    void logged_qso (QSO *_qso);
 };
 
 #endif // PARSEN1MM_H

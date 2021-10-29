@@ -25,18 +25,18 @@
  *    along with KLogServer.  If not, see <https://www.gnu.org/licenses/>.   *
  *                                                                           *
  *****************************************************************************/
+#include <QFile>
 #include "qso.h"
 
 class FileManager
 {
 public:
     FileManager();
-    bool saveQSO(QSO _qso);
+    bool saveQSO(QSO *_qso);
     bool setFileName (const QString &_fn);
 
 private:
     QString fileName;
-
 };
 
 #endif // FILEMANAGER_H

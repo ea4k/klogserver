@@ -37,6 +37,7 @@
 #include <QtDebug>
 #include <QDataStream>
 #include "utilities.h"
+#include "qso.h"
 
 #include "klogdefinitions.h"
 
@@ -73,8 +74,7 @@ public:
 private:
 
 signals:
-
-    void logged_qsos (QString _dxcall);
+    void logged_qso (QSO &_qso);
 };
 
 #endif // PARSEWSJTX_H

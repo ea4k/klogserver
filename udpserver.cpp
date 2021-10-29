@@ -34,11 +34,12 @@ UDPServer::UDPServer(QObject *parent) :
 {
         //qDebug() << "UDPServer::UDPServer"  ;
        //address = QString("127.0.0.1");
-       port = 2237;
-       haveNetworkInterface = false;
-       socketServer = new QUdpSocket(this);
-       groupAddress = QHostAddress::Any;
-       networkInterface = QNetworkInterface();
+    lastQso = new QSO;
+    port = 2237;
+    haveNetworkInterface = false;
+    socketServer = new QUdpSocket(this);
+    groupAddress = QHostAddress::Any;
+    networkInterface = QNetworkInterface();
        /*
        //if (socketServer->bind(QHostAddress::AnyIPv4, port, QAbstractSocket::ShareAddress))
        if (socketServer->bind(port, QAbstractSocket::ShareAddress))
@@ -50,27 +51,32 @@ UDPServer::UDPServer(QObject *parent) :
              //qDebug() << "UDPServer::UDPServer - Multicast group joined NOK"  ;
        }
        */
-        util = new Utilities;
-        logging = false;
-        realtime = false;
+    util = new Utilities;
+    logging = false;
+    realtime = false;
+    parseN1MM = new ParseN1MM;
+    parseWSJTX = new ParseWSJTX;
 
-        connect(socketServer,SIGNAL(readyRead()),this,SLOT(slotReadPendingDatagrams()));
+    connect(socketServer,SIGNAL(readyRead()),this,SLOT(slotReadPendingDatagrams()));
+    //connect(parseWSJTX,SIGNAL(logged_qso(QSO)),this,SLOT(slotLoggedQSO(QSO)));
+    connect(parseN1MM,SIGNAL(logged_qso(QSO*)),this,SLOT(slotLoggedQSO(QSO*)));
 }
 
 void UDPServer::slotReadPendingDatagrams()
 {
-        //qDebug() << "UDPServer::slotReadPendingDatagrams"  ;
+    qDebug() << Q_FUNC_INFO;
     while (socketServer->hasPendingDatagrams()) {
         QByteArray datagram;
         datagram.resize(socketServer->pendingDatagramSize());
         QHostAddress sender;
         quint16 senderPort;
-            //qDebug() << "UDPServer::slotReadPendingDatagrams: length = " << QString::number(socketServer->pendingDatagramSize()) ;
+        qDebug() << "UDPServer::slotReadPendingDatagrams: length = " << QString::number(socketServer->pendingDatagramSize()) ;
         socketServer->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
         parse (datagram);
-         //qDebug() << "UDPServer::slotReadPendingDatagrams: = " << datagram ;
+        qDebug() << "UDPServer::slotReadPendingDatagrams: = " << datagram ;
     }
 
+    qDebug() << Q_FUNC_INFO << " - END";
 }
 
 bool UDPServer::start()
@@ -189,7 +195,7 @@ void UDPServer::leaveMultiCastGroup()
     //qDebug() << "UDPServer::leaveMultiCastGroup - END";
 }
 
- bool UDPServer::isStarted()
+bool UDPServer::isStarted()
  {
      return  socketServer->isValid();
  }
@@ -220,20 +226,19 @@ void UDPServer::parse(const QByteArray &msg)
     if (msg.startsWith ("<?xml"))
     {
         qDebug() << Q_FUNC_INFO << ": N1MM detected! *******************************";
-        parseN1MM = new ParseN1MM;
+
         parseN1MM->parse(msg);
         return;
     }
     else if (magic == 2914831322)
     {
         //qDebug() << "UDPServer::parse: - Magic WSJTX = " << QString::number(magic);
-        parseWSJTX = new ParseWSJTX;
+
         parseWSJTX->parse(msg);
         return;
     }
     //qDebug() << "UDPServer::parse: TYPE: " << QString::number(type);
 }
-
 
 bool UDPServer::stop()
 {
@@ -296,7 +301,6 @@ void UDPServer::setLogging(const bool _t)
     logging = _t;
 }
 
-
 void UDPServer::setRealTimeUpdate(const bool _t)
 {
         //qDebug() << "UDPServer::setRealTimeUpdate: " <<   endl;
@@ -309,4 +313,33 @@ void UDPServer::setRealTimeUpdate(const bool _t)
             //qDebug() << "UDPServer::setRealTimeUpdate: FALSE" <<   endl;
     }
        realtime = _t;
+}
+
+void UDPServer::slotLoggedQSO(QSO *_qso)
+{
+    qDebug() << Q_FUNC_INFO;
+    //QSO qso = _qso;
+
+    if (lastQso->isSame (_qso))
+    {
+        qDebug() << Q_FUNC_INFO << ": Same QSO, exitting!";
+        return;
+    }
+
+    lastQso->setCall (_qso->getCall ());
+    lastQso->setDateTimeOn (_qso->getDateTimeOn ());
+    lastQso->setBand (_qso->getBand ());
+    lastQso->setMode (_qso->getMode());
+
+    if (!_qso->isValid ())
+    {
+        qDebug() << Q_FUNC_INFO << ": Not valid QSO, exitting!";
+        return;
+    }
+
+    FileManager fileManager;
+    fileManager.saveQSO(_qso);
+    _qso->clear ();
+
+    qDebug() << Q_FUNC_INFO << " - END";
 }

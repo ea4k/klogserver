@@ -37,7 +37,7 @@ public:
     explicit MainClass(QObject *parent = nullptr);
 
 private slots:
-    void slotWSJTXQSOReceived(QSO _qso) ;
+    //void slotWSJTXQSOReceived(QSO _qso) ;
 
 private:
     UDPServer *udpserver;
