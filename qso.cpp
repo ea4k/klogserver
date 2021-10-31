@@ -373,7 +373,7 @@ QString QSO::getADIF()
     adif = adif + adifForField.getADIFForAward_Granted(const QString &_data);
 
 */
-
+    adif = adif + "<EOR>";
     return adif;
 }
 
