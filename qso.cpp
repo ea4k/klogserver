@@ -304,7 +304,7 @@ QString QSO::getADIF()
     adif = adif + adifForField.getADIFForRSTRcvd(getRSTRX ());
     adif = adif + adifForField.getADIFForBand(getBand ());
     adif = adif + adifForField.getADIFForMode(getMode ());
-    //adif = adif + adifForField.getADIFForSubMode();
+    adif = adif + adifForField.getADIFForSubMode(getSubMode ());
     adif = adif + adifForField.getADIFForCQz(QString::number(getCQz ()));
     adif = adif + adifForField.getADIFForITUz(QString::number(getITUz ()));
     adif = adif + adifForField.getADIFForDXCC(QString::number(getDXCC ()));
