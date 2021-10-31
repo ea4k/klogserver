@@ -142,7 +142,21 @@ void ParseN1MM::parseXMLContact(QXmlStreamReader &_xml)
         }
         else if (_xml.name () == "mode")
         {
-            qso->setMode (_xml.readElementText ());
+            QString aux = _xml.readElementText ();
+            if ( aux == "USB" )
+            {
+                qso->setMode ("SSB");
+                qso->setSubMode ("USB");
+            }
+            else if ( aux == "LSB" )
+            {
+                qso->setMode ("SSB");
+                qso->setSubMode ("LSB");
+            }
+            else
+            {
+                qso->setMode (aux);
+            }
         }
         else if (_xml.name () == "call")
         {

@@ -492,6 +492,25 @@ QString QSO::getMode()
     return mode;
 }
 
+bool QSO::setSubMode(const QString &_c)
+{
+    if (_c.length()>0)
+    {
+        submode = _c;
+        return true;
+    }
+    else
+    {
+        mode = QString();
+        return false;
+    }
+}
+
+QString QSO::getSubMode()
+{
+    return submode;
+}
+
 bool QSO::setDate(const QDate &_c)
 {
    //qDebug() << "QSO::setDate: " << util->getDateSQLiteStringFromDate(_c) << QT_ENDL;

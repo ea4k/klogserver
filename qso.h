@@ -58,6 +58,8 @@ public:
     QString getBand();
     bool setMode(const QString &_c);
     QString getMode();
+    bool setSubMode(const QString &_c);
+    QString getSubMode();
     bool setDate(const QDate &_c);
     QDate getDate();
 
@@ -242,7 +244,7 @@ private:
     int srx, stx, points;
 
 
-    QString satName, satMode, callsign, stationCallsign, operatorCall, propMode, band, mode, gridsquare, myGridsquare, qth, name, RST_tx, RST_rx;
+    QString satName, satMode, callsign, stationCallsign, operatorCall, propMode, band, mode, submode, gridsquare, myGridsquare, qth, name, RST_tx, RST_rx;
     int qsoId, logId, dxcc;
     int cqz, myCQz, ituz, myITUz;
     QString qsl_rcvd, qsl_sent, qslSenVia, qslRecVia, qslVia, qslMsg;
@@ -288,7 +290,7 @@ private:
    PFX,  PRECEDENCE,  PROP_MODE,  PUBLIC_KEY,
    QRZCOM_QSO_UPLOAD_DATE,  QRZCOM_QSO_UPLOAD_STATUS,  QSLMSG,  QSLMSG_INTL,  QSLRDATE,  QSLSDATE,  QSL_RCVD,  QSL_RCVD_VIA,  QSL_SENT,  QSL_SENT_VIA,  QSL_VIA,  QSO_COMPLETE,   QSO_RANDOM,  QTH,  QTH_INTL,
    REGION,  RIG,  RIG_INTL,  RST_RCVD,  RST_SENT,  RX_PWR,
-   SAT_MODE,  SAT_NAME,  SFI,  SIG,  SIG_INTL,  SIG_INFO,  SIG_INFO_INTL,  SILENT_KEY,  SKCC,  SOTA_REF,  SRX,  SRX_STRING,  STATE,  STATION_CALLSIGN,  STX,  STX_STRING,  SUBMODE,  SWL,
+   SAT_MODE,  SAT_NAME,  SFI,  SIG,  SIG_INTL,  SIG_INFO,  SIG_INFO_INTL,  SILENT_KEY,  SKCC,  SOTA_REF,  SRX,  SRX_STRING,  STATE,  STATION_CALLSIGN,  STX,  STX_STRING,  SWL,
    TEN_TEN,   TX_PWR,
    UKSMG,  USACA_COUNTIES,
    VE_PROV,  VUCC_GRIDS,
