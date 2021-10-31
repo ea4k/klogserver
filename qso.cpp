@@ -494,6 +494,7 @@ QString QSO::getMode()
 
 bool QSO::setSubMode(const QString &_c)
 {
+    //qDebug() << Q_FUNC_INFO << ": " << _c;
     if (_c.length()>0)
     {
         submode = _c;
@@ -501,13 +502,14 @@ bool QSO::setSubMode(const QString &_c)
     }
     else
     {
-        mode = QString();
+        submode = QString();
         return false;
     }
 }
 
 QString QSO::getSubMode()
 {
+    //qDebug() << Q_FUNC_INFO << ": " << submode;
     return submode;
 }
 
