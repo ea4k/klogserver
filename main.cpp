@@ -29,6 +29,18 @@
 #include <QObject>
 #include "mainclass.h"
 
+
+void showHelp()
+{
+    QTextStream cout(stdout);
+    cout << "Usage: klog [OPTION]...";
+    cout << "Options:" ;
+    cout << "     -?           Display this help" ;
+    cout << "     -h           Display this help";
+    cout << "     --help       Display this help";
+    cout << "     -v           Display program version";
+}
+
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
@@ -38,9 +50,34 @@ int main(int argc, char *argv[])
     app.setApplicationVersion(QString(APP_VERSION));
     QStringList arguments;
     QTextStream cout(stdout);
-
+    arguments.clear();
+    arguments << app.arguments();
+    if (arguments.length()>1)
+    {
+        if (arguments.contains("-h"))
+        {
+            showHelp();
+        }
+        else if (arguments.contains("-?"))
+        {
+            showHelp();
+        }
+        else if (arguments.contains("--help"))
+        {
+            showHelp();
+        }
+        else if (arguments.contains("-v"))
+        {
+            cout << "Version: KLogServer-" << app.applicationVersion() << QT_ENDL;
+        }
+        else
+        {
+            showHelp();
+        }
+        app.quit();
+        return 0;
+    }
     MainClass main;
-
-
     return app.exec();
 }
+
