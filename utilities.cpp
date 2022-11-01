@@ -29,12 +29,12 @@
 bool g_callsignCheck;
 Utilities::Utilities()
 {
-    //qDebug() << "Utilities::Utilities"  ;
+    qDebug() << "Utilities::Utilities"  ;
     init();
 
     //palRed.setColor(QPalette::Text, Qt::red);
     //palBlack.setColor(QPalette::Text, Qt::black);
-    //qDebug() << "Utilities::Utilities - END"  ;
+    qDebug() << "Utilities::Utilities - END"  ;
 }
 
 Utilities::~Utilities(){}
@@ -48,7 +48,7 @@ void Utilities::init()
 
 void Utilities::setVersion(const QString &_v)
 {
-       //qDebug() << "Utilities::setVersion: " << _v ;
+       qDebug() << "Utilities::setVersion: " << _v ;
     softwareVersion = _v;
 }
 
@@ -59,7 +59,7 @@ QString Utilities::getVersion()
 
 double Utilities::getVersionDouble()
 {
-    //qDebug() << "Utilities::getVersionDouble: " << softwareVersion ;
+    qDebug() << "Utilities::getVersionDouble: " << softwareVersion ;
     if (softwareVersion.count('.')>1)
     {
         QString first = softwareVersion.section('.', 0, 0);
@@ -68,16 +68,16 @@ double Utilities::getVersionDouble()
         QString decimals = softwareVersion.section('.', pos, -1);
         decimals.remove('.');
         first = first + "." + decimals;
-           //qDebug() << "Utilities::getVersionDouble - returning: "  << first ;
+           qDebug() << "Utilities::getVersionDouble - returning: "  << first ;
         return first.toDouble();
     }
-       //qDebug() << "Utilities::getVersionDouble: no points detected" ;
+       qDebug() << "Utilities::getVersionDouble: no points detected" ;
     return softwareVersion.toDouble();
 }
 
 int Utilities::getProgresStepForDialog(int totalSteps)
 {
-       //qDebug() << "Utilities::getProgresStepForDialog";
+       qDebug() << "Utilities::getProgresStepForDialog";
     if (totalSteps <=100)
         return 1;
     else if (totalSteps <=1000)
@@ -98,7 +98,7 @@ int Utilities::getProgresStepForDialog(int totalSteps)
 
 bool Utilities::trueOrFalse(const QString &_s)
 {// reads a String and return true if s.upper()== TRUE :-)
-         //qDebug() << "Utilities::trueOrFalse: " << _s ;
+         qDebug() << "Utilities::trueOrFalse: " << _s ;
 
     if ( (_s.toUpper()) == "TRUE")
     {
@@ -137,7 +137,7 @@ QString Utilities::boolToQString(const bool _b)
 
 QString Utilities::checkAndFixASCIIinADIF(const QString &_data)
 {
-    //qDebug() << "SetupDialog::checkAndFixASCIIinADIF " << _data ;
+    qDebug() << "SetupDialog::checkAndFixASCIIinADIF " << _data ;
 // This function is not really working with ASCII but with Unicode
 //TODO: this function is also in the FileManager class. Maybe I should call that one and keep just one copy
     ushort unicodeVal;
@@ -152,7 +152,7 @@ QString Utilities::checkAndFixASCIIinADIF(const QString &_data)
         {
             newString.append(st.at(i));
         }
-             //qDebug() << "SetupDialog::checkAndFixunicodeinADIF: " << st.at(i) <<" = " << QString::number(unicodeVal) ;
+             qDebug() << "SetupDialog::checkAndFixunicodeinADIF: " << st.at(i) <<" = " << QString::number(unicodeVal) ;
     }
     // Show into another lineEdit
     return newString;
@@ -160,17 +160,17 @@ QString Utilities::checkAndFixASCIIinADIF(const QString &_data)
 
 void Utilities::printQString(const QStringList &_qs)
 {
-        //qDebug() << "Utilities::printQString: COMMENT THIS CALL BEFORE RELEASING" ;
+        qDebug() << "Utilities::printQString: COMMENT THIS CALL BEFORE RELEASING" ;
     if (_qs.length()<1)
     {
-            //qDebug() << "Utilities::printQString: EMPTY QStringList received!!" ;
+            qDebug() << "Utilities::printQString: EMPTY QStringList received!!" ;
         return;
     }
     for (int i=0; i<_qs.length()-1;i++)
     {
-            //qDebug() << _qs.at(i) << "/" ;
+            qDebug() << _qs.at(i) << "/" ;
     }
-        //qDebug() << _qs.at(_qs.length()-1) ;
+        qDebug() << _qs.at(_qs.length()-1) ;
 }
 
 QString Utilities::getGlobalAgent(const QString &_klogversion)
@@ -261,22 +261,22 @@ QString Utilities::getHomeDir()
 {
 //TODO: To be removed when the defaultDir is saved in the config file
 #if defined(Q_OS_WIN)
-         //qDebug() << "WINDOWS DETECTED!: "  << QDir::homePath() + "/klog" ;
+         qDebug() << "WINDOWS DETECTED!: "  << QDir::homePath() + "/klog" ;
     return QDir::homePath()+"/klog";  // We create the \klog for the logs and data
 
 #else
-         //qDebug() << "NO WINDOWS DETECTED!"  ;
+         qDebug() << "NO WINDOWS DETECTED!"  ;
     return QDir::homePath()+"/.klog";  // We create the ~/.klog for the logs and data
 #endif
 }
 
 QString Utilities::getDefaultRST(const QString &_m)
 {
-   //qDebug() << "Utilities::getDefaultRST: " << _m ;
+   qDebug() << "Utilities::getDefaultRST: " << _m ;
 
    if ((_m == "SSB") || (_m== "LSB") || (_m=="USB") )
    {
-        //qDebug() << "MainWindow::setRSTToMode: Detected SSB/LSB/USB"  ;
+        qDebug() << "MainWindow::setRSTToMode: Detected SSB/LSB/USB"  ;
        return "59";
    }
    else if ((_m == "CW") || (_m == "RTTY"))
@@ -313,7 +313,7 @@ QString Utilities::getKLogDefaultDatabaseFile()
 
 QString Utilities::getKLogDBFile()
 {
-        //qDebug() << "Utilities::getKLogDBFile: start " ;
+        qDebug() << "Utilities::getKLogDBFile: start " ;
 
     dbPath = getKLogDefaultDatabaseFile();
     QFile file(getCfgFile());
@@ -335,13 +335,13 @@ QString Utilities::getKLogDBFile()
             dbPath = getKLogDefaultDatabaseFile();
         }
     }
-       //qDebug() << "Utilities::getKLogDBFile: path to use: " << dbPath ;
+       qDebug() << "Utilities::getKLogDBFile: path to use: " << dbPath ;
     return dbPath + "/logbook.dat";
 }
 
 QString Utilities::getKLogDBBackupFile()
 {
-        //qDebug() << "Utilities::getKLogDBFile: start " ;
+        qDebug() << "Utilities::getKLogDBFile: start " ;
 
     dbPath = getKLogDefaultDatabaseFile();
     QFile file(getCfgFile());
@@ -362,13 +362,13 @@ QString Utilities::getKLogDBBackupFile()
             dbPath = getKLogDefaultDatabaseFile();
         }
     }
-       //qDebug() << "Utilities::getKLogDBFile: path to use: " << dbPath ;
+       qDebug() << "Utilities::getKLogDBFile: path to use: " << dbPath ;
     return dbPath + "/" + QDateTime::currentDateTime().toString("yyyyMMdd-hhmmss") + "-backup-logbook.dat" ;
 }
 
 bool Utilities::processConfigLine(const QString &_line)
 {
-             //qDebug() << "Utilities::processConfigLine: " << _line ;
+             qDebug() << "Utilities::processConfigLine: " << _line ;
 
         QString line = _line.simplified();
         //line.simplified();
@@ -376,11 +376,11 @@ bool Utilities::processConfigLine(const QString &_line)
         QStringList values = line.split("=", QT_SKIP);
 
         if (line.startsWith('#')){
-                 //qDebug() << "Utilities::processConfigLine: notes Line!" ;
+                 qDebug() << "Utilities::processConfigLine: notes Line!" ;
             return true;
         }
         if (!( (line.contains('=')) && (line.contains(';')))){
-                 //qDebug() << "Utilities::processConfigLine: Wrong Line!" ;
+                 qDebug() << "Utilities::processConfigLine: Wrong Line!" ;
             return false;
         }
         QString field = (values.at(0)).toUpper();
@@ -393,7 +393,7 @@ bool Utilities::processConfigLine(const QString &_line)
 
         if (field == "DBPATH")
         {
-                  //qDebug() << "Utilities::processConfigLine: dbPATH found: " << value ;
+                  qDebug() << "Utilities::processConfigLine: dbPATH found: " << value ;
             dbPath = value;
         }
         return true;
@@ -402,13 +402,13 @@ bool Utilities::processConfigLine(const QString &_line)
 /*
 QString Utilities::getKLogDatabaseFile(const QString &_file)
 {
-       //qDebug() << "Utilities::getKLogDatabaseFile:" << _file ;
+       qDebug() << "Utilities::getKLogDatabaseFile:" << _file ;
     if ( QFile::exists(_file + "/logbook.dat") )
     {
-           //qDebug() << "Utilities::getKLogDatabaseFile:returning: " <<  _file + "/logbook.dat" ;
+           qDebug() << "Utilities::getKLogDatabaseFile:returning: " <<  _file + "/logbook.dat" ;
         return _file + "/logbook.dat";
     }
-         //qDebug() << "Utilities::getKLogDatabaseFile: Does not exist so default: " <<  getKLogDefaultDatabaseFile() ;
+         qDebug() << "Utilities::getKLogDatabaseFile: Does not exist so default: " <<  getKLogDefaultDatabaseFile() ;
         return getKLogDefaultDatabaseFile();
 }
 */
@@ -417,11 +417,11 @@ QString Utilities::getCfgFile()
 {
 //TODO: To be removed when the defaultDir is saved in the config file
 #if defined(Q_OS_WIN)
-         //qDebug() << "WINDOWS DETECTED!: " << getHomeDir() + "/klogrc.cfg"  ;
+         qDebug() << "WINDOWS DETECTED!: " << getHomeDir() + "/klogrc.cfg"  ;
     return getHomeDir() + "/klogrc.cfg";
 
 #else
-         //qDebug() << "NO WINDOWS DETECTED!: " << getHomeDir() + "/klogrc.cfg"  ;
+         qDebug() << "NO WINDOWS DETECTED!: " << getHomeDir() + "/klogrc.cfg"  ;
     return getHomeDir() + "/klogrc";
 
 #endif
@@ -430,11 +430,11 @@ QString Utilities::getCfgFile()
 QString Utilities::getDebugLogFile()
 {
 #if defined(Q_OS_WIN)
-         //qDebug() << "WINDOWS DETECTED!: " << getHomeDir() + "/klogrc.cfg"  ;
+         qDebug() << "WINDOWS DETECTED!: " << getHomeDir() + "/klogrc.cfg"  ;
     return getHomeDir() + "/klogdebug.log";
 
 #else
-         //qDebug() << "NO WINDOWS DETECTED!: " << getHomeDir() + "/klogrc.cfg"  ;
+         qDebug() << "NO WINDOWS DETECTED!: " << getHomeDir() + "/klogrc.cfg"  ;
     return getHomeDir() + "/klogdebug.log";
 
 #endif
@@ -468,34 +468,34 @@ QString Utilities::getLoTWAdifFile()
 
 QString Utilities::getTQSLsFileName()
 {
-      //qDebug() << "Utilities::getTQSLsFileName: "   ;
+      qDebug() << "Utilities::getTQSLsFileName: "   ;
 
 #if defined(Q_OS_WIN)
-         //qDebug() << "WINDOWS DETECTED!: "   ;
+         qDebug() << "WINDOWS DETECTED!: "   ;
     return "tqsl.exe";
 #elif   defined(Q_OS_MACOS)
-      //qDebug() << "macOS DETECTED!: "   ;
+      qDebug() << "macOS DETECTED!: "   ;
     return "tqsl.app";
 #else
-         //qDebug() << "NO WINDOWS/macOS DETECTED!: "   ;
+         qDebug() << "NO WINDOWS/macOS DETECTED!: "   ;
     return "tqsl";
 #endif
 }
 
 QString Utilities::getTQSLsPath()
 {
-      //qDebug() << "Utilities::getDefaultProgramsPath " ;
+      qDebug() << "Utilities::getDefaultProgramsPath " ;
 
 #if defined(Q_OS_WIN64)
-         //qDebug() << "WINDOWS DETECTED!: "   ;
+         qDebug() << "WINDOWS DETECTED!: "   ;
     return "C:/Program Files/TrustedQSL/";
 #elif defined(Q_OS_WIN32)
     return "C:/Program Files (x86)/TrustedQSL/";
 #elif defined(Q_OS_MACOS)
-      //qDebug() << "macOS DETECTED!: "   ;
+      qDebug() << "macOS DETECTED!: "   ;
     return "/Applications/TrustedQSL/";
 #else
-         //qDebug() << "NO WINDOWS/macOS DETECTED!: "   ;
+         qDebug() << "NO WINDOWS/macOS DETECTED!: "   ;
     return "/usr/bin/";
 #endif
 }
@@ -533,35 +533,35 @@ bool Utilities::isValidContinent(const QString &c)
 
 bool Utilities::isValidDate(const QDate _d)
 {
-      //qDebug() << "Utilities::isValidDate: " << _d.toString("yyyyMMdd") ;
+      qDebug() << "Utilities::isValidDate: " << _d.toString("yyyyMMdd") ;
     if (_d.isValid())
     {
         if ( _d > QDate::fromString("18000101", "yyyyMMdd") )
         {
-              //qDebug() << "Utilities::isValidDate: OK" ;
+              qDebug() << "Utilities::isValidDate: OK" ;
             return true;
         }
     }
-      //qDebug() << "Utilities::isValidDate: Error" ;
+      qDebug() << "Utilities::isValidDate: Error" ;
     return false;
 }
 
 bool Utilities::isValidDateTime(const QString &_d)
 {
-       //qDebug() << "Utilities::isValidDateTime: " << _d ;
+       qDebug() << "Utilities::isValidDateTime: " << _d ;
     QDateTime _dateTime = QDateTime::fromString(_d, "yyyyMMddhhmmss");
     if ( _dateTime.isValid()  )
     {
-           //qDebug() << "Utilities::isValidDateTime: 1"  ;
+           qDebug() << "Utilities::isValidDateTime: 1"  ;
         return isValidDate(_dateTime.date());
     }
-       //qDebug() << "Utilities::isValidDateTime: Error" ;
+       qDebug() << "Utilities::isValidDateTime: Error" ;
     return false;
 }
 
 bool Utilities::isValidSubCall(const QString &_c)
 {
-    //qDebug() << "Utilities::isValidSubCall: " << _c ;
+    qDebug() << "Utilities::isValidSubCall: " << _c ;
     // This functions only checks simple calls like EA4K, not composed like EA4K/F of F/EA4K/QRP
     //Rules: http://life.itu.int/radioclub/rr/art19.pdf
     if (_c.contains ('/'))
@@ -570,12 +570,12 @@ bool Utilities::isValidSubCall(const QString &_c)
     }
     if (_c.length()<3)
     {
-        //qDebug() << "Utilities::isValidSubCall: FALSE-1: " << _c ;
+        qDebug() << "Utilities::isValidSubCall: FALSE-1: " << _c ;
         return false;
     }
     if (!(_c.at(_c.length ()-1).isLetter ()))
     {
-        //qDebug() << "Utilities::isValidSubCall: FALSE-1.1: " << _c ;
+        qDebug() << "Utilities::isValidSubCall: FALSE-1.1: " << _c ;
         return false;
     }
     for (int i = 0; i<_c.length ();i++)
@@ -590,23 +590,23 @@ bool Utilities::isValidSubCall(const QString &_c)
     int prefixLength = isAPrefix (_c);
     if (prefixLength<1)
     {
-        //qDebug() << "Utilities::isValidSubCall: FALSE-1.2: " << _c ;
+        qDebug() << "Utilities::isValidSubCall: FALSE-1.2: " << _c ;
         return false;
     }
 
     int i = prefixLength;
-    //qDebug() << "Utilities::isValidSubCall: prefixLength" << QString::number(prefixLength) ;
-    //qDebug() << "Utilities::isValidSubCall: call" << _c ;
+    qDebug() << "Utilities::isValidSubCall: prefixLength" << QString::number(prefixLength) ;
+    qDebug() << "Utilities::isValidSubCall: call" << _c ;
     while(i<_c.length ()-1)
     {
         if (!((_c.at(i).isLetter()) ))
         {
-            //qDebug() << "Utilities::isValidSubCall: FALSE-1.3: " << _c ;
+            qDebug() << "Utilities::isValidSubCall: FALSE-1.3: " << _c ;
             return false;
         }
         i++;
     }
-    //qDebug() << "Utilities::isValidSubCall: true" ;
+    qDebug() << "Utilities::isValidSubCall: true" ;
     return true;
 }
 
@@ -644,18 +644,18 @@ int Utilities::isAPrefix (const QString &_c)
     // The length would be including the number, if possible EA4 or;
     // including just the country prefix: EA if the number is not included.
 
-    //qDebug() << "Utilities::isAPrefix: " << _c ;
+    qDebug() << "Utilities::isAPrefix: " << _c ;
     // Prefixes are at least 1 chars (like in K1K)
     int length = _c.length ();
 
     if (length < 1)
     {
-        //qDebug() << "Utilities::isAPrefix: TOO short prefix - false - END \n";
+        qDebug() << "Utilities::isAPrefix: TOO short prefix - false - END \n";
         return -1;
     }
 
     QString call = _c;
-    //qDebug() << "Utilities::isAPrefix: -10: " << call.at(0) ;
+    qDebug() << "Utilities::isAPrefix: -10: " << call.at(0) ;
     QChar firstChar = call.at(0);
     QList<QChar> validFirstLettersOnly = {'B', 'F', 'G', 'I', 'K', 'M', 'N', 'R', 'W'};
 
@@ -663,31 +663,31 @@ int Utilities::isAPrefix (const QString &_c)
     {
         if (validFirstLettersOnly.contains (firstChar))
         {
-            //qDebug() << "Utilities::isAPrefix: VALID 1 letter" ;
+            qDebug() << "Utilities::isAPrefix: VALID 1 letter" ;
             return 1;
         }
         else
         {
-            //qDebug() << "Utilities::isAPrefix: NOT VALID 1 letter" ;
+            qDebug() << "Utilities::isAPrefix: NOT VALID 1 letter" ;
             return -1;
         }
     }
 
     QChar secondChar = call.at(1);
-    //qDebug() << "Utilities::isAPrefix: SecondChar: " << secondChar ;
+    qDebug() << "Utilities::isAPrefix: SecondChar: " << secondChar ;
     int pref = -1;
     if (call.count(QRegularExpression("\\d")) >0) // Does it has any digit?
     {
-        //qDebug() << "Utilities::isAPrefix: It has digits: " << call ;
+        qDebug() << "Utilities::isAPrefix: It has digits: " << call ;
         bool done = false;
         int i = -1;
         while ((i < length-1) && !done)
         {
-            //qDebug() << "Utilities::isAPrefix: in the while: " << QString::number(i) ;
+            qDebug() << "Utilities::isAPrefix: in the while: " << QString::number(i) ;
             i++;
             if (call.at(i).isLetter ())
             {
-                //qDebug() << "Utilities::isAPrefix: in the while: is a Letter: " << call.at(i) ;
+                qDebug() << "Utilities::isAPrefix: in the while: is a Letter: " << call.at(i) ;
                 if (pref>0)
                 {
                     pref = i;
@@ -696,7 +696,7 @@ int Utilities::isAPrefix (const QString &_c)
             }
             else
             {
-                //qDebug() << "Utilities::isAPrefix: in the while: is NOT a Letter: " << call.at(i) ;
+                qDebug() << "Utilities::isAPrefix: in the while: is NOT a Letter: " << call.at(i) ;
                 if (i > 0)
                 {
                     pref = i;
@@ -705,18 +705,18 @@ int Utilities::isAPrefix (const QString &_c)
         } // end of while
     }
 
-    //qDebug() << "Utilities::isAPrefix: After the while: " << QString::number(pref) ;
+    qDebug() << "Utilities::isAPrefix: After the while: " << QString::number(pref) ;
 
     QString prefix;
     if (pref>0)
     {
-         //qDebug() << "Utilities::isAPrefix: pref>0 =>: " << call.left (pref) ;
+         qDebug() << "Utilities::isAPrefix: pref>0 =>: " << call.left (pref) ;
         prefix = call.left (pref);
     }
     else
     {
         prefix = call;
-        //qDebug() << "Utilities::isAPrefix: pref<=0 =>: " << call ;
+        qDebug() << "Utilities::isAPrefix: pref<=0 =>: " << call ;
     }
 
     length = prefix.length();
@@ -727,25 +727,25 @@ int Utilities::isAPrefix (const QString &_c)
         thirdChar = prefix.at(2);
     }
 
-    //qDebug() << "Utilities::isAPrefix: -50 "  ;
+    qDebug() << "Utilities::isAPrefix: -50 "  ;
     // The first two characters shall be two letters or a letter followed
     // by a digit or a digit followed by a letter. The first two characters or in certain cases
     // the first character of a call sign constitute the nationality identification
 
     if (firstChar.isDigit() && secondChar.isDigit())
     {
-        //qDebug() << "Utilities::isAPrefix: FALSE-6: " << prefix ;
+        qDebug() << "Utilities::isAPrefix: FALSE-6: " << prefix ;
         return -1;
     }
 
-    //qDebug() << "Utilities::isAPrefix: -60 "  ;
+    qDebug() << "Utilities::isAPrefix: -60 "  ;
     if (firstChar.isLetter() && secondChar.isLetter() && thirdChar.isLetter())
     {
-        //qDebug() << "Utilities::isAPrefix: FALSE-6: " << prefix ;
+        qDebug() << "Utilities::isAPrefix: FALSE-6: " << prefix ;
         return -1;
     }
 
-    //qDebug() << "Utilities::isAPrefix: -70 "  ;
+    qDebug() << "Utilities::isAPrefix: -70 "  ;
 
     QList<QChar> validFirstLetters = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T' ,'U', 'V', 'W', 'Z'};
 
@@ -753,7 +753,7 @@ int Utilities::isAPrefix (const QString &_c)
     {
         if (!validFirstLetters.contains (firstChar))
         {
-            //qDebug() << "Utilities::isAPrefix: NOT VALID 1 letter not valid" ;
+            qDebug() << "Utilities::isAPrefix: NOT VALID 1 letter not valid" ;
             return -1;
         }
     }
@@ -763,12 +763,12 @@ int Utilities::isAPrefix (const QString &_c)
      // For the time being, KLog will not check that
     if ( (firstChar.isLetter ()) && (secondChar.isDigit ()) && (validFirstLetters.contains(firstChar)))
     {
-        //qDebug() << "Utilities::isAPrefix validFirstLetters contains the first one!" ;
+        qDebug() << "Utilities::isAPrefix validFirstLetters contains the first one!" ;
         if (firstChar == 'C')
         {
             if ((secondChar == '1') || (secondChar == '7'))
             {
-                //qDebug() << "Utilities::isAPrefix: FALSE-7.1: " << prefix ;
+                qDebug() << "Utilities::isAPrefix: FALSE-7.1: " << prefix ;
                 return false;
             }
         }
@@ -777,7 +777,7 @@ int Utilities::isAPrefix (const QString &_c)
             //((secondChar == '1') || (secondChar == '8'))
             if (false)
             {
-                //qDebug() << "Utilities::isAPrefix: FALSE-7.2: " << prefix ;
+                qDebug() << "Utilities::isAPrefix: FALSE-7.2: " << prefix ;
                 return false;
             }
         }
@@ -785,7 +785,7 @@ int Utilities::isAPrefix (const QString &_c)
         {
             if (!(secondChar == '2') && !(secondChar == '3') && !(secondChar == '4') && !(secondChar == '7')
             {
-                //qDebug() << "Utilities::isAPrefix: FALSE-7.3: " << prefix ;
+                qDebug() << "Utilities::isAPrefix: FALSE-7.3: " << prefix ;
                 return false;
             }
         }
@@ -793,7 +793,7 @@ int Utilities::isAPrefix (const QString &_c)
         {
             if ((secondChar == '1') )
             {
-                //qDebug() << "Utilities::isAPrefix: FALSE-7.4: " << prefix ;
+                qDebug() << "Utilities::isAPrefix: FALSE-7.4: " << prefix ;
                 return false;
             }
         }
@@ -801,7 +801,7 @@ int Utilities::isAPrefix (const QString &_c)
         {
             if ((secondChar == '1') || (secondChar == '9'))
             {
-                //qDebug() << "Utilities::isAPrefix: FALSE-7.5: " << prefix ;
+                qDebug() << "Utilities::isAPrefix: FALSE-7.5: " << prefix ;
                 return false;
             }
         }
@@ -809,7 +809,7 @@ int Utilities::isAPrefix (const QString &_c)
         {
             if (secondChar == '1')
             {
-                //qDebug() << "Utilities::isAPrefix: FALSE-7.6: " << prefix ;
+                qDebug() << "Utilities::isAPrefix: FALSE-7.6: " << prefix ;
                 return false;
             }
         }
@@ -817,7 +817,7 @@ int Utilities::isAPrefix (const QString &_c)
         {
             if ((secondChar == '1') || (secondChar == '6'))
             {
-                //qDebug() << "Utilities::isAPrefix: FALSE-7.7: " << prefix ;
+                qDebug() << "Utilities::isAPrefix: FALSE-7.7: " << prefix ;
                 return false;
             }
         }
@@ -825,7 +825,7 @@ int Utilities::isAPrefix (const QString &_c)
         {
             if (secondChar == '0')
             {
-                //qDebug() << "Utilities::isAPrefix: FALSE-7.8: " << prefix ;
+                qDebug() << "Utilities::isAPrefix: FALSE-7.8: " << prefix ;
                 return false;
             }
         }
@@ -833,7 +833,7 @@ int Utilities::isAPrefix (const QString &_c)
         {
             if ((secondChar == '1') || (secondChar == '9'))
             {
-                //qDebug() << "Utilities::isAPrefix: FALSE-7.9: " << prefix ;
+                qDebug() << "Utilities::isAPrefix: FALSE-7.9: " << prefix ;
                 return false;
             }
         }
@@ -841,18 +841,18 @@ int Utilities::isAPrefix (const QString &_c)
         {
             if (!((secondChar == '2') || (secondChar == '3')))
             {
-                //qDebug() << "Utilities::isAPrefix: FALSE-7.10: " << prefix ;
+                qDebug() << "Utilities::isAPrefix: FALSE-7.10: " << prefix ;
                 return false;
             }
         }
-        //qDebug() << "Utilities::isAPrefix: 1-Letter + number prefix valid: " << prefix ;
+        qDebug() << "Utilities::isAPrefix: 1-Letter + number prefix valid: " << prefix ;
     }
     */
-    //qDebug() << "Utilities::isAPrefix: After the if's"  ;
+    qDebug() << "Utilities::isAPrefix: After the if's"  ;
     // It seems to be a valid prefix, let's count how many chars belong to the prefix, first letter after the digit
     // should be the suffix starting point
 
-    //qDebug() << "Utilities::isAPrefix: Prefix length: " << QString::number(pref) << "/" << prefix ;
+    qDebug() << "Utilities::isAPrefix: Prefix length: " << QString::number(pref) << "/" << prefix ;
     if (pref>0)
     {
         return pref;
@@ -870,46 +870,46 @@ void Utilities::setCallValidation(const bool _b)
 
 bool Utilities::isValidCall(const QString &_c)
 {
-     //qDebug() << "Utilities::isValidCall: " << _c ;
+     qDebug() << "Utilities::isValidCall: " << _c ;
     // Prefixes are at least 2 chars
     if (!g_callsignCheck)
     {
-         //qDebug() << "Utilities::isValidCall - 009" ;
+         qDebug() << "Utilities::isValidCall - 009" ;
         return true;
     }
-     //qDebug() << "Utilities::isValidCall - 010" ;
+     qDebug() << "Utilities::isValidCall - 010" ;
     QString call = _c;
     if (_c.length()<3)
     {
-         //qDebug() << "Utilities::isValidCall: FALSE-1: " << _c ;
+         qDebug() << "Utilities::isValidCall: FALSE-1: " << _c ;
         return false;
     }
-     //qDebug() << "Utilities::isValidCall - 015" ;
+     qDebug() << "Utilities::isValidCall - 015" ;
     call.replace('\\', '/');
 
     if (call.count('/')>2)
     {
-        //qDebug() << "Utilities::isValidCall: FALSE-3: " << call;
+        qDebug() << "Utilities::isValidCall: FALSE-3: " << call;
         return false;
     }
-     //qDebug() << "Utilities::isValidCall - 020" ;
+     qDebug() << "Utilities::isValidCall - 020" ;
     if (call.count('/') == 2)
     { //Things like F/EA4K/P will become F/EA4K
-        //qDebug() << "Utilities::isValidCall: Two /; Ignoring the last part: " << call ;
+        qDebug() << "Utilities::isValidCall: Two /; Ignoring the last part: " << call ;
         QStringList parts;
         parts.clear();
         parts << call.split('/');
         call = parts.at(0) + "/" + parts.at(1);
     }
-     //qDebug() << "Utilities::isValidCall - 025" ;
-    //qDebug() << "Utilities::isValidCall: Call: " << call ;
+     qDebug() << "Utilities::isValidCall - 025" ;
+    qDebug() << "Utilities::isValidCall: Call: " << call ;
 
     if (call.count('/') == 1)
     { // Complex calls (like F/EA4K or EA4K/F OR /p OR /qrp
       // We are just checking the call format not if it belongs to a country or whatever.
       // It may return true for wrong calls like "ABC/EA4K"
       // TODO: Add a check just for prefixes to fix the previous
-         //qDebug() << "Utilities::isValidCall: Call with one /: " << call ;
+         qDebug() << "Utilities::isValidCall: Call with one /: " << call ;
         QStringList parts;
         parts.clear();
         parts << call.split ('/');
@@ -932,7 +932,7 @@ bool Utilities::isValidCall(const QString &_c)
 
 QString Utilities::getPrefixFromCall(const QString &_c)
 {
-    //qDebug() << Q_FUNC_INFO << ": " << _c ;
+    qDebug() << Q_FUNC_INFO << ": " << _c ;
     QString call = _c;
     call.replace('\\', '/');
 
@@ -953,26 +953,26 @@ QString Utilities::getPrefixFromCall(const QString &_c)
         parts << call.split ('/');
         if (parts.at(0).length ()<parts.at(1).length ())
         { // First one is shorter
-            //qDebug() << Q_FUNC_INFO << ": First one is shorter: " ;
+            qDebug() << Q_FUNC_INFO << ": First one is shorter: " ;
             int pref = isAPrefix (parts.at(0));
             if (pref>0)
             {
-                //qDebug() << Q_FUNC_INFO << ": R1=" << call.left (pref) ;
+                qDebug() << Q_FUNC_INFO << ": R1=" << call.left (pref) ;
                 return parts.at(0);
             }
             else
             {
-                //qDebug() << Q_FUNC_INFO << ": EMPTY-2"  ;
+                qDebug() << Q_FUNC_INFO << ": EMPTY-2"  ;
                 return QString();
             }
         }
         else if(parts.at(0).length ()>parts.at(1).length ())
         { // Second one is shorter
-            //qDebug() << Q_FUNC_INFO << ": Second one is shorter: " ;
+            qDebug() << Q_FUNC_INFO << ": Second one is shorter: " ;
             pref = isAPrefix (parts.at(1));
             if (pref>0)
             {
-                //qDebug() << Q_FUNC_INFO << ": R2=" << parts.at(1) ;
+                qDebug() << Q_FUNC_INFO << ": R2=" << parts.at(1) ;
                 return parts.at(1);
             }
             else
@@ -980,28 +980,28 @@ QString Utilities::getPrefixFromCall(const QString &_c)
                 pref = isAPrefix (parts.at(0));
                 if (pref>0)
                 {
-                    //qDebug() << Q_FUNC_INFO << ": R3=" << parts.at(0).left(pref) ;
+                    qDebug() << Q_FUNC_INFO << ": R3=" << parts.at(0).left(pref) ;
                     return parts.at(0).left (pref);
                 }
                 else
                 {
-                    //qDebug() << Q_FUNC_INFO << ": EMPTY-3"  ;
+                    qDebug() << Q_FUNC_INFO << ": EMPTY-3"  ;
                     return QString();
                 }
             }
         }
         else
         { //Both lenght are just the same, we need to check both parts and return true if one is valid
-            //qDebug() << Q_FUNC_INFO << ": Same length, we shoudl consider the first one if valid, if not the second one " ;
+            qDebug() << Q_FUNC_INFO << ": Same length, we shoudl consider the first one if valid, if not the second one " ;
         }
     }
     pref = isAPrefix (call);
     if (pref>0)
     {
-        //qDebug() << Q_FUNC_INFO << ": R4=" << call.left (pref) ;
+        qDebug() << Q_FUNC_INFO << ": R4=" << call.left (pref) ;
         return call.left (pref);
     }
-    //qDebug() << Q_FUNC_INFO << ": EMPTY-4"  ;
+    qDebug() << Q_FUNC_INFO << ": EMPTY-4"  ;
     return QString();
 }
 
@@ -1016,7 +1016,7 @@ QPair<QString, QString> Utilities::getCallParts(const QString &_c)
 
     if (_c.length()<3)
     {
-        //qDebug() << "Utilities::isValidCall: FALSE-1: " << _c ;
+        qDebug() << "Utilities::isValidCall: FALSE-1: " << _c ;
         return pair;
     }
 
@@ -1024,7 +1024,7 @@ QPair<QString, QString> Utilities::getCallParts(const QString &_c)
 
     if (call.count('/')>2)
     {
-        //qDebug() << "Utilities::isValidCall: FALSE-3: " << call ;
+        qDebug() << "Utilities::isValidCall: FALSE-3: " << call ;
         return pair;
     }
     if (call.count('/') == 2)
@@ -1041,13 +1041,13 @@ QPair<QString, QString> Utilities::getCallParts(const QString &_c)
         QStringList parts;
         parts.clear();
         parts << call.split('/');
-        //qDebug() << "Utilities::isValidCall: first: " << parts.at(0) ;
-        //qDebug() << "Utilities::isValidCall: second: " << parts.at(1) ;
+        qDebug() << "Utilities::isValidCall: first: " << parts.at(0) ;
+        qDebug() << "Utilities::isValidCall: second: " << parts.at(1) ;
 
         QStringList validSuffixes = {"P", "M", "MM", "QRP", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"};
         if (validSuffixes.contains (parts.at(1)))
         {
-            //qDebug() << "Utilities::isValidCall: returning a result just with: " << parts.at(1) ;
+            qDebug() << "Utilities::isValidCall: returning a result just with: " << parts.at(1) ;
             pair.second = parts.at(1);
             return pair;
         }
@@ -1057,19 +1057,19 @@ QPair<QString, QString> Utilities::getCallParts(const QString &_c)
             if (isAPrefix (parts.at(0))>0)
             //if (isAPrefix (parts.at(0)))
             {
-                //qDebug() << "Utilities::isValidCall: first is shorter " ;
+                qDebug() << "Utilities::isValidCall: first is shorter " ;
                 pair.first = parts.at(0);
                 pair.second = parts.at(1);
             }
             else
             {
-                //qDebug() << "Utilities::isValidCall: first is shorter but not a prefix" ;
+                qDebug() << "Utilities::isValidCall: first is shorter but not a prefix" ;
                 return pair;
             }
         }
         else
         {
-             //qDebug() << "Utilities::isValidCall: second is shorter " ;
+             qDebug() << "Utilities::isValidCall: second is shorter " ;
              if (isAPrefix (parts.at(1))>0)
              {
 
@@ -1078,7 +1078,7 @@ QPair<QString, QString> Utilities::getCallParts(const QString &_c)
              }
              else
              {
-                 //qDebug() << "Utilities::isValidCall: second is shorter but not a prefix" ;
+                 qDebug() << "Utilities::isValidCall: second is shorter but not a prefix" ;
                  return pair;
              }
         }
@@ -1089,16 +1089,16 @@ QPair<QString, QString> Utilities::getCallParts(const QString &_c)
 
 bool Utilities::isSameFreq(const double fr1, const double fr2)
 {
-    //qDebug() << Q_FUNC_INFO << ": " << QString::number(fr1) << "/" << QString::number(fr2) << " = " << QString::number(fabs(fr1 - fr2)) ;
+    qDebug() << Q_FUNC_INFO << ": " << QString::number(fr1) << "/" << QString::number(fr2) << " = " << QString::number(fabs(fr1 - fr2)) ;
 
     if (fabs(fr1 - fr2) < 0.001)
     {
-        //qDebug() << Q_FUNC_INFO << " - true" ;
+        qDebug() << Q_FUNC_INFO << " - true" ;
         return true;
     }
     else
     {
-        //qDebug() << Q_FUNC_INFO << " - false" ;
+        qDebug() << Q_FUNC_INFO << " - false" ;
         return false;
     }
     //return fabs(fr1 - fr2) < 0.001;
@@ -1151,7 +1151,7 @@ bool Utilities::isValidGrid(const QString &_b)
 
 bool Utilities::isValidVUCCGrids(const QString &_b)
 {
-    //qDebug() << Q_FUNC_INFO << ": " << _b;
+    qDebug() << Q_FUNC_INFO << ": " << _b;
     QStringList tmp;
 
     //QString a = _b;
@@ -1160,26 +1160,26 @@ bool Utilities::isValidVUCCGrids(const QString &_b)
 
     if ((tmp.length ()!=2) && (tmp.length ()!=4))
     {
-        //qDebug() << Q_FUNC_INFO << ": NON VALID LENGTH";
+        qDebug() << Q_FUNC_INFO << ": NON VALID LENGTH";
         return false;
     }
 
-    //qDebug() << Q_FUNC_INFO << ": tmp: " << tmp;
+    qDebug() << Q_FUNC_INFO << ": tmp: " << tmp;
     QString aux;
     foreach (aux, tmp) {
         aux = aux.trimmed ();
 
         if ((!isValidGrid (aux)) || (aux.length ()!=4))
         {
-            //qDebug() << Q_FUNC_INFO << ": NON VALID";
+            qDebug() << Q_FUNC_INFO << ": NON VALID";
             return false;
         }
         else
         {
-            //qDebug() << Q_FUNC_INFO << ": VALID: " << aux;
+            qDebug() << Q_FUNC_INFO << ": VALID: " << aux;
         }
     }
-    //qDebug() << Q_FUNC_INFO << ": VALID-END";
+    qDebug() << Q_FUNC_INFO << ": VALID-END";
     return true;
 }
 
@@ -1221,15 +1221,15 @@ bool Utilities::isValidName(const QString &_b)
 
 bool Utilities::isDBFileExisting()
 {
-    //qDebug() << "Utilities::isDBFileExisting: " << getKLogDBFile() ;
+    qDebug() << "Utilities::isDBFileExisting: " << getKLogDBFile() ;
     if (QFile::exists(getKLogDBFile()))
     {
-             //qDebug() << "Utilities::isDBFileExisting - true" ;
+             qDebug() << "Utilities::isDBFileExisting - true" ;
         return true;
     }
     else
     {
-             //qDebug() << "Utilities::isDBFileExisting - false" ;
+             qDebug() << "Utilities::isDBFileExisting - false" ;
         return false;
     }
     //return false;
@@ -1237,16 +1237,16 @@ bool Utilities::isDBFileExisting()
 
 bool Utilities::isDBFileExisting(const QString &_file)
 {
-         //qDebug() << "Utilities::isDBFileExisting2: " << _file ;
+         qDebug() << "Utilities::isDBFileExisting2: " << _file ;
 
     if (QFile::exists(_file))
     {
-             //qDebug() << "Utilities::isDBFileExisting2 - true" ;
+             qDebug() << "Utilities::isDBFileExisting2 - true" ;
         return true;
     }
     else
     {
-             //qDebug() << "Utilities::isDBFileExisting2 - false" ;
+             qDebug() << "Utilities::isDBFileExisting2 - false" ;
         return false;
     }
     //return false;
@@ -1254,7 +1254,7 @@ bool Utilities::isDBFileExisting(const QString &_file)
 
 bool Utilities::isValidADIFField(const QString &_b)
 {
-       //qDebug() << "Utilities::isValidADIFField: " << _b ;
+       qDebug() << "Utilities::isValidADIFField: " << _b ;
     /*
         This functions checks if the ADIF field has the proper format.
         <Field:length:Data type>Data
@@ -1262,7 +1262,7 @@ bool Utilities::isValidADIFField(const QString &_b)
 
     if (!((_b.startsWith('<')) &&  (_b.count('>')) == 1 ))
     {
-           //qDebug() << "Utilities::isValidADIFField: BAD FORMAT: No < or > delimiters: " << _b ;
+           qDebug() << "Utilities::isValidADIFField: BAD FORMAT: No < or > delimiters: " << _b ;
         return false;
     }
     if (_b.simplified() == "<EOR>")
@@ -1277,7 +1277,7 @@ bool Utilities::isValidADIFField(const QString &_b)
 
     if (qs.size()!= 2)
     {
-           //qDebug() << "Utilities::isValidADIFField-0 (not two): " << QString::number(qs.size()) ;
+           qDebug() << "Utilities::isValidADIFField-0 (not two): " << QString::number(qs.size()) ;
         return false;
     }
 
@@ -1286,8 +1286,8 @@ bool Utilities::isValidADIFField(const QString &_b)
     //data = data.simplified();
     QString dataType = QString();
 
-      //qDebug() << "Utilities::isValidADIFField-Field: " << field ;
-      //qDebug() << "Utilities::isValidADIFField_Data: " << data ;
+      qDebug() << "Utilities::isValidADIFField-Field: " << field ;
+      qDebug() << "Utilities::isValidADIFField_Data: " << data ;
 
     int length = data.length();
     int separatorPosition = 0;
@@ -1299,7 +1299,7 @@ bool Utilities::isValidADIFField(const QString &_b)
         dataType = field.section(':', 2, 2);
         if (!validDataTypes.contains(dataType.toUpper()))
         {
-               //qDebug() << "Utilities::isValidADIFField - FORMAT ERROR: Wrong data type: " << dataType ;
+               qDebug() << "Utilities::isValidADIFField - FORMAT ERROR: Wrong data type: " << dataType ;
             return false;
         }
     }
@@ -1309,23 +1309,23 @@ bool Utilities::isValidADIFField(const QString &_b)
     }
     else
     {
-           //qDebug() << "Utilities::isValidADIFField - FORMAT ERROR, more than 2 \":\" - " << field ;
+           qDebug() << "Utilities::isValidADIFField - FORMAT ERROR, more than 2 \":\" - " << field ;
         return false;
     }
 
     if ( length != separatorPosition)
     {
-           //qDebug() << "Utilities::isValidADIFField: Data Length problem: " << (field) << "/" << data << " - " << QString::number(length) << "/" << QString::number(separatorPosition) ;
+           qDebug() << "Utilities::isValidADIFField: Data Length problem: " << (field) << "/" << data << " - " << QString::number(length) << "/" << QString::number(separatorPosition) ;
         return false;
     }
 
     if (separatorPosition <= 0)
     {
-        //qDebug() << "Utilities::isValidADIFField: Length problem <= 0" ;
+        qDebug() << "Utilities::isValidADIFField: Length problem <= 0" ;
         return false;
     }
 
-       //qDebug() << "FileManager::checkADIFValidFormat: Return true" ;
+       qDebug() << "FileManager::checkADIFValidFormat: Return true" ;
     return true;
 }
 
@@ -1366,7 +1366,7 @@ bool Utilities::isValidUpload_Status(const QString &c)
 
 QStringList Utilities::getValidADIFFieldAndData(const QString &_b)
 {
-   //qDebug() << "Utilities::getValidADIFFieldAndData: " << _b ;
+   qDebug() << "Utilities::getValidADIFFieldAndData: " << _b ;
     /*
         This functions checks if the ADIF field has the proper format.
         <Field:length:Data type>Data
@@ -1376,12 +1376,12 @@ QStringList Utilities::getValidADIFFieldAndData(const QString &_b)
 
     if (!(_b.startsWith('<')))
     {
-        //qDebug() << "Utilities::getValidADIFFieldAndData: BAD FORMAT: No < or > delimiters: " << _b ;
+        qDebug() << "Utilities::getValidADIFFieldAndData: BAD FORMAT: No < or > delimiters: " << _b ;
         return QStringList();
     }
     if (_b.simplified() == "<EOR>")
     {
-        //qDebug() << "Utilities::getValidADIFFieldAndData: EOR" ;
+        qDebug() << "Utilities::getValidADIFFieldAndData: EOR" ;
         result << "EOR" << "EOR";
         return result;
     }
@@ -1395,7 +1395,7 @@ QStringList Utilities::getValidADIFFieldAndData(const QString &_b)
         aux = qs.at(0);
     }
 
-    //qDebug() << "Utilities::getValidADIFFieldAndData: -20" ;
+    qDebug() << "Utilities::getValidADIFFieldAndData: -20" ;
     QStringList validDataTypes = {"B", "N", "D", "T", "S", "I", "M", "G", "E", "L"};
 
     qs.clear();
@@ -1403,18 +1403,18 @@ QStringList Utilities::getValidADIFFieldAndData(const QString &_b)
 
     if (qs.size()!= 2)
     {
-        //qDebug() << "Utilities::getValidADIFFieldAndData-0 (not two): " << QString::number(qs.size()) ;
+        qDebug() << "Utilities::getValidADIFFieldAndData-0 (not two): " << QString::number(qs.size()) ;
         return result;
     }
-    //qDebug() << "Utilities::getValidADIFFieldAndData: -30" ;
+    qDebug() << "Utilities::getValidADIFFieldAndData: -30" ;
     //QString field = (qs.at(0)).right((qs.at(0)).length() - 1);
     QString field = (qs.at(0)).right((qs.at(0)).length() - 1);
     QString data = (qs.at(1)).simplified();
     //data = data.simplified();
     QString dataType = QString();
 
-    //qDebug() << "Utilities::getValidADIFFieldAndData-Field: " << field ;
-    //qDebug() << "Utilities::getValidADIFFieldAndData_Data: " << data ;
+    qDebug() << "Utilities::getValidADIFFieldAndData-Field: " << field ;
+    qDebug() << "Utilities::getValidADIFFieldAndData_Data: " << data ;
 
     int length = data.length();
     int separatorPosition = 0;
@@ -1424,10 +1424,10 @@ QStringList Utilities::getValidADIFFieldAndData(const QString &_b)
     { // DATE:8:D / 20141020
         separatorPosition = (field.section(':', 1, 1)).toInt();
         dataType = field.section(':', 2, 2);
-          //qDebug() << "Utilities::getValidADIFFieldAndData - DataType: -" << dataType << "-" ;
+          qDebug() << "Utilities::getValidADIFFieldAndData - DataType: -" << dataType << "-" ;
         if (!validDataTypes.contains(dataType.toUpper()))
         {
-              //qDebug() << "Utilities::getValidADIFFieldAndData - FORMAT ERROR: Wrong data type: " << dataType ;
+              qDebug() << "Utilities::getValidADIFFieldAndData - FORMAT ERROR: Wrong data type: " << dataType ;
             return result;
         }
     }
@@ -1437,27 +1437,27 @@ QStringList Utilities::getValidADIFFieldAndData(const QString &_b)
     }
     else
     {
-        //qDebug() << "Utilities::getValidADIFFieldAndData - FORMAT ERROR, more than 2 \":\" - " << field ;
+        qDebug() << "Utilities::getValidADIFFieldAndData - FORMAT ERROR, more than 2 \":\" - " << field ;
         return result;
     }
-    //qDebug() << "Utilities::getValidADIFFieldAndData: -60" ;
+    qDebug() << "Utilities::getValidADIFFieldAndData: -60" ;
     if ( length != separatorPosition)
     {
-        //qDebug() << "Utilities::getValidADIFFieldAndData: Data Length problem: " << (field) << "/" << data << " - " << QString::number(length) << "/" << QString::number(separatorPosition) ;
+        qDebug() << "Utilities::getValidADIFFieldAndData: Data Length problem: " << (field) << "/" << data << " - " << QString::number(length) << "/" << QString::number(separatorPosition) ;
         return result;
     }
 
     if (separatorPosition <= 0)
     {
-        //qDebug() << "Utilities::getValidADIFFieldAndData: Length problem <= 0" ;
+        qDebug() << "Utilities::getValidADIFFieldAndData: Length problem <= 0" ;
         return result;
     }
-     //qDebug() << "Utilities::getValidADIFFieldAndData: -90: f: " << field ;
-      //qDebug() << "Utilities::getValidADIFFieldAndData: -90: d: " << data<< endl;
+     qDebug() << "Utilities::getValidADIFFieldAndData: -90: f: " << field ;
+      qDebug() << "Utilities::getValidADIFFieldAndData: -90: d: " << data<< endl;
     //field = field.section(':', 0, 0);
     result.clear();
     result << field.section(':', 0, 0) << data;
-     //qDebug() << "Utilities::checkADIFValidFormat: Return true: " << result.at(0) << "/" << result.at(1) ;
+     qDebug() << "Utilities::checkADIFValidFormat: Return true: " << result.at(0) << "/" << result.at(1) ;
     return result;
 }
 
@@ -1531,13 +1531,13 @@ QDate Utilities::getDateFromSQliteString(const QString &_s)
 
 QDate Utilities::getDateFromADIFDateString(const QString &_s)
 {// Expects an ADIF DATE format string: "YYYYMMDD"
-   //qDebug() << "Utilities::getDateFromADIFDateString: " << _s ;
+   qDebug() << "Utilities::getDateFromADIFDateString: " << _s ;
     return QDate::fromString(_s, "yyyyMMdd");
 }
 
 QTime Utilities::getTimeFromADIFTimeString(const QString &_s)
 {// Expects and ADIF TIME format String "HHMMSS" or "HHMM"
-    //qDebug() << "Utilities::getTimeFromADIFTimeString: " << _s ;
+    qDebug() << "Utilities::getTimeFromADIFTimeString: " << _s ;
     if (_s.length()==4)
     {
         return QTime::fromString(_s, "hhmm");
@@ -1550,7 +1550,7 @@ QTime Utilities::getTimeFromADIFTimeString(const QString &_s)
 
 QDate Utilities::getDateFromLoTWQSLDateString(const QString &_s)
 {
-    //qDebug() << "Utilities::getDateFromLoTWQSLDateString: " << _s ;
+    qDebug() << "Utilities::getDateFromLoTWQSLDateString: " << _s ;
     QStringList datet;
     datet.clear();
     if (_s.endsWith ('Z'))
@@ -1561,7 +1561,7 @@ QDate Utilities::getDateFromLoTWQSLDateString(const QString &_s)
     {
         datet << _s.split(" ");
     }
-    //qDebug() << "Utilities::getDateFromLoTWQSLDateString: " << datet.at(0) ;
+    qDebug() << "Utilities::getDateFromLoTWQSLDateString: " << datet.at(0) ;
     return QDate::fromString(datet.at(0), "yyyy-MM-dd");
 }
 
@@ -1658,16 +1658,16 @@ QString Utilities::getClearSQLi(QString _s)
 /*
 QPalette Utilities::getPalete(bool _ok)
 {
-   //qDebug() << "Utilities::getPalete"  ;
+   qDebug() << "Utilities::getPalete"  ;
     if (_ok)
     {
-       //qDebug() << "Utilities::getPalete - true"  ;
+       qDebug() << "Utilities::getPalete - true"  ;
         return palRed;
         //return QPalette::setColor(QPalette::Text, Qt::red);
     }
     else
     {
-       //qDebug() << "Utilities::getPalete - false"  ;
+       qDebug() << "Utilities::getPalete - false"  ;
         return palBlack;
     }
 }
@@ -1692,7 +1692,7 @@ bool Utilities::isDarkMode()
 
 QString Utilities::getLogColumnName(const QString &_column)
 {
-    //qDebug() << Q_FUNC_INFO << ": " << _column;
+    qDebug() << Q_FUNC_INFO << ": " << _column;
     if (_column == "qso_date")
         return QObject::tr("Date");
     else if (_column == "call")

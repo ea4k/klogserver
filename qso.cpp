@@ -35,7 +35,7 @@ QSO::~QSO()
 
 void QSO::clear()
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
 
     qsoId = -1;
     logId = -1;
@@ -262,32 +262,32 @@ QString QSO::getPrecedence()
 
 bool QSO::isSame(QSO *qso)
 {
-    //qDebug() << Q_FUNC_INFO << callsign << "/" << qso->callsign;
-    //qDebug() << Q_FUNC_INFO << qso_dateTime.toString ("yyyy-MM-dd hh:mm:ss") << "/" << qso->qso_dateTime.toString("yyyy-MM-dd hh:mm:ss");
-    //qDebug() << Q_FUNC_INFO << band << "/" << qso->band;
-    //qDebug() << Q_FUNC_INFO << ": Different mode";
+    qDebug() << Q_FUNC_INFO << callsign << "/" << qso->callsign;
+    qDebug() << Q_FUNC_INFO << qso_dateTime.toString ("yyyy-MM-dd hh:mm:ss") << "/" << qso->qso_dateTime.toString("yyyy-MM-dd hh:mm:ss");
+    qDebug() << Q_FUNC_INFO << band << "/" << qso->band;
+    qDebug() << Q_FUNC_INFO << ": Different mode";
 
     if (callsign != qso->callsign )
     {
-        //qDebug() << Q_FUNC_INFO << ": Different call";
+        qDebug() << Q_FUNC_INFO << ": Different call";
         return false;
     }
     if (qso_dateTime != qso->qso_dateTime)
     {
-       //qDebug() << Q_FUNC_INFO << ": Different qdatetime";
+       qDebug() << Q_FUNC_INFO << ": Different qdatetime";
         return false;
     }
     if (band != qso->band)
     {
-       //qDebug() << Q_FUNC_INFO << ": Different band";
+       qDebug() << Q_FUNC_INFO << ": Different band";
         return false;
     }
     if (mode != qso->mode)
     {
-        //qDebug() << Q_FUNC_INFO << ": Different mode";
+        qDebug() << Q_FUNC_INFO << ": Different mode";
         return false;
     }
-    //qDebug() << Q_FUNC_INFO << ": ALL THE SAME";
+    qDebug() << Q_FUNC_INFO << ": ALL THE SAME";
     return true;
 }
 
@@ -397,15 +397,15 @@ int QSO::getLogId()
 
 bool QSO::isValid()
 {
-   //qDebug() << "QSO::isValid: " << callsign << QT_ENDL;
+   qDebug() << "QSO::isValid: " << callsign << QT_ENDL;
     if ( (callsign.length()>0))
     {
-       //qDebug() << "QSO::isValid: TRUE" << QT_ENDL;
+       qDebug() << "QSO::isValid: TRUE" << QT_ENDL;
         return true;
     }
     else
     {
-       //qDebug() << "QSO::isValid: FALSE" << QT_ENDL;
+       qDebug() << "QSO::isValid: FALSE" << QT_ENDL;
         return false;
     }
 
@@ -413,16 +413,16 @@ bool QSO::isValid()
 
 bool QSO::setCall(const QString &_c)
 {
-    //qDebug() << "QSO::setCall: " << _c << QT_ENDL;
+    qDebug() << "QSO::setCall: " << _c << QT_ENDL;
     if (util->isValidCall(_c))
     {
-        //qDebug() << "QSO::setCall: Valid Call"  << QT_ENDL;
+        qDebug() << "QSO::setCall: Valid Call"  << QT_ENDL;
         callsign = _c;
         return true;
     }
     else
     {
-        //qDebug() << "QSO::setCall: NOT valid Call"  << QT_ENDL;
+        qDebug() << "QSO::setCall: NOT valid Call"  << QT_ENDL;
         return false;
     }
 }
@@ -434,7 +434,7 @@ QString QSO::getCall()
 
 bool QSO::setBand(const QString &_c)
 {
-   //qDebug() << "QSO::setBand: "<< _c << QT_ENDL;
+   qDebug() << "QSO::setBand: "<< _c << QT_ENDL;
     if (_c.length()>0)
     {
         band = _c;
@@ -454,7 +454,7 @@ QString QSO::getBand()
 
 bool QSO::setBandRX(const QString &_c)
 {
-   //qDebug() << "QSO::setBandRX: "<< _c << QT_ENDL;
+   qDebug() << "QSO::setBandRX: "<< _c << QT_ENDL;
     if (_c.length()>0)
     {
         band = _c;
@@ -494,7 +494,7 @@ QString QSO::getMode()
 
 bool QSO::setSubMode(const QString &_c)
 {
-    //qDebug() << Q_FUNC_INFO << ": " << _c;
+    qDebug() << Q_FUNC_INFO << ": " << _c;
     if (_c.length()>0)
     {
         submode = _c;
@@ -509,22 +509,22 @@ bool QSO::setSubMode(const QString &_c)
 
 QString QSO::getSubMode()
 {
-    //qDebug() << Q_FUNC_INFO << ": " << submode;
+    qDebug() << Q_FUNC_INFO << ": " << submode;
     return submode;
 }
 
 bool QSO::setDate(const QDate &_c)
 {
-   //qDebug() << "QSO::setDate: " << util->getDateSQLiteStringFromDate(_c) << QT_ENDL;
+   qDebug() << "QSO::setDate: " << util->getDateSQLiteStringFromDate(_c) << QT_ENDL;
     if (_c.isValid())
     {
-       //qDebug() << "QSO::setDate: VALID" << QT_ENDL;
+       qDebug() << "QSO::setDate: VALID" << QT_ENDL;
         qso_dateTime.setDate(_c);
         return true;
     }
     else
     {
-       //qDebug() << "QSO::setDate: NOT VALID" << QT_ENDL;
+       qDebug() << "QSO::setDate: NOT VALID" << QT_ENDL;
         qso_dateTime.setDate(QDate());
         return false;
     }
@@ -537,16 +537,16 @@ QDate QSO::getDate()
 
 bool QSO::setTimeOn(const QTime &_c)
 {
-   //qDebug() << "QSO::setQSLTime: " << _c.toString("mmhhss") << QT_ENDL;
+   qDebug() << "QSO::setQSLTime: " << _c.toString("mmhhss") << QT_ENDL;
     if (_c.isValid())
     {
-       //qDebug() << "QSO::setQSLTime: VALID" << QT_ENDL;
+       qDebug() << "QSO::setQSLTime: VALID" << QT_ENDL;
         qso_dateTime.setTime(_c);
         return true;
     }
     else
     {
-       //qDebug() << "QSO::setQSLTime: NOT VALID" << QT_ENDL;
+       qDebug() << "QSO::setQSLTime: NOT VALID" << QT_ENDL;
         qso_dateTime.setTime(QTime());
         return false;
     }
@@ -564,16 +564,16 @@ QDateTime QSO::getDateTimeOn()
 
 bool QSO::setDateTimeOn(const QDateTime &_c)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     if (_c.isValid())
     {
-        //qDebug() << Q_FUNC_INFO << " - Valid Date";
+        qDebug() << Q_FUNC_INFO << " - Valid Date";
         qso_dateTime = _c;
         return true;
     }
     else
     {
-        //qDebug() << Q_FUNC_INFO << " - Not valid Date";
+        qDebug() << Q_FUNC_INFO << " - Not valid Date";
         return false;
     }
 }
@@ -585,16 +585,16 @@ QDateTime QSO::getDateTimeOff()
 
 bool QSO::setDateTimeOff(const QDateTime &_c)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     if (_c.isValid())
     {
-        //qDebug() << Q_FUNC_INFO << " - Valid Date";
+        qDebug() << Q_FUNC_INFO << " - Valid Date";
         qso_dateTime_off = _c;
         return true;
     }
     else
     {
-        //qDebug() << Q_FUNC_INFO << " - Not valid Date";
+        qDebug() << Q_FUNC_INFO << " - Not valid Date";
         return false;
     }
 }
@@ -815,16 +815,16 @@ QString QSO::getLoTWQSL_SENT()
 
 bool QSO::setLoTWQSLSDate(const QDate &_c)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     if (_c.isValid())
     {
-        //qDebug() << Q_FUNC_INFO << " - valid";
+        qDebug() << Q_FUNC_INFO << " - valid";
         QSLLoTWSDate = _c;
         return true;
     }
     else
     {
-        //qDebug() << Q_FUNC_INFO << " - NOT valid";
+        qDebug() << Q_FUNC_INFO << " - NOT valid";
         QSLLoTWSDate = QDate();
         return false;
     }
@@ -837,16 +837,16 @@ QDate QSO::getLoTWQSLSDate()
 
 bool QSO::setLoTWQSL_RCVD(const QString &_c)
 {
-    //qDebug() << "QSO::setLoTWQSL_RCVD: " << _c  << QT_ENDL;
+    qDebug() << "QSO::setLoTWQSL_RCVD: " << _c  << QT_ENDL;
     if (util->isValidQSL_Rcvd(_c))
     {
-        //qDebug() << "QSO::setLoTWQSL_RCVD: VALID " << QT_ENDL;
+        qDebug() << "QSO::setLoTWQSL_RCVD: VALID " << QT_ENDL;
         lotw_qsl_rcvd = _c;
         return true;
     }
     else
     {
-        //qDebug() << "QSO::setLoTWQSL_RCVD: NOT valid " << QT_ENDL;
+        qDebug() << "QSO::setLoTWQSL_RCVD: NOT valid " << QT_ENDL;
         return false;
     }
 }
@@ -858,16 +858,16 @@ QString QSO::getLoTWQSL_RCVD()
 
 bool QSO::setLoTWQSLRDate(const QDate &_c)
 {
-    //qDebug() << "QSO::setLoTWQSLRDate: " << _c.toString("yyyy-MM-dd") << QT_ENDL;
+    qDebug() << "QSO::setLoTWQSLRDate: " << _c.toString("yyyy-MM-dd") << QT_ENDL;
     if (_c.isValid())
     {
-        //qDebug() << "QSO::setLoTWQSLRDate: TRUE" << QT_ENDL;
+        qDebug() << "QSO::setLoTWQSLRDate: TRUE" << QT_ENDL;
         QSLLoTWRDate = _c;
         return true;
     }
     else
     {
-        //qDebug() << "QSO::setLoTWQSLRDate: FALSE" << QT_ENDL;
+        qDebug() << "QSO::setLoTWQSLRDate: FALSE" << QT_ENDL;
         QSLLoTWRDate = QDate();
         return false;
     }
@@ -1031,7 +1031,7 @@ void QSO::setLoTWUpdating(bool _lotw)
 
 bool QSO::setGridSquare(const QString &_c)
 {
-    //qDebug() << Q_FUNC_INFO << ": " << _c;
+    qDebug() << Q_FUNC_INFO << ": " << _c;
     if (util->isValidGrid(_c))
     {
         gridsquare = _c;
@@ -1045,7 +1045,7 @@ bool QSO::setGridSquare(const QString &_c)
 
 QString QSO::getGridSquare()
 {
-    //qDebug() << Q_FUNC_INFO << ": " << gridsquare;
+    qDebug() << Q_FUNC_INFO << ": " << gridsquare;
     return gridsquare;
 }
 
@@ -1571,16 +1571,16 @@ QString QSO::getAddress()
 // SET DATA
 bool QSO::setData(const QString &_adifPair)
 {
-    //qDebug() << "QSO::setData: " << _adifPair << QT_ENDL;
+    qDebug() << "QSO::setData: " << _adifPair << QT_ENDL;
     QStringList d;
     d.clear();
     d << util->getValidADIFFieldAndData(_adifPair);
     if (d.length()!=2)
     {
-        //qDebug() << "QSO::setData: NOT VALID ADIF: " << _adifPair << QT_ENDL;
+        qDebug() << "QSO::setData: NOT VALID ADIF: " << _adifPair << QT_ENDL;
         return false;
     }
-    //qDebug() << "QSO::setData: " << d.at(0) << "/" << d.at(1) << QT_ENDL;
+    qDebug() << "QSO::setData: " << d.at(0) << "/" << d.at(1) << QT_ENDL;
 
     QString field = d.at(0).toUpper();
     QString data = d.at(1);
@@ -1603,7 +1603,7 @@ bool QSO::setData(const QString &_adifPair)
     }
     else if (field == "QSO_DATE")
     {
-       //qDebug() << "QSO::setData: QSO_DATE: " << data  << QT_ENDL;
+       qDebug() << "QSO::setData: QSO_DATE: " << data  << QT_ENDL;
         setDate(util->getDateFromADIFDateString(data));
     }
     else if (field == "FREQ")
@@ -1660,19 +1660,19 @@ bool QSO::setData(const QString &_adifPair)
     }
     else if (field == "APP_LOTW_RXQSL")
     {
-        //qDebug() << "QSO::setData: APP_LOTW_RXQSL: " << data  << QT_ENDL;
+        qDebug() << "QSO::setData: APP_LOTW_RXQSL: " << data  << QT_ENDL;
         setLoTWQSL_RCVD("Y");
         setLoTWQSLRDate(util->getDateFromLoTWQSLDateString(data));
     }
     else if (field == "APP_LOTW_RXQSO")
     {
-        //qDebug() << "QSO::setData: APP_LOTW_RXQSO: " << data  << QT_ENDL;
+        qDebug() << "QSO::setData: APP_LOTW_RXQSO: " << data  << QT_ENDL;
         setLoTWQSL_SENT("Y");
         setLoTWQSLSDate(util->getDateFromLoTWQSLDateString(data));
     }
     else if (field == "APP_LOTW_QSO_TIMESTAMP")
     {
-        //qDebug() << "QSO::setData: APP_LoTW_QSO_TIMESTAMP: " << data  << QT_ENDL;
+        qDebug() << "QSO::setData: APP_LoTW_QSO_TIMESTAMP: " << data  << QT_ENDL;
         setLoTWQSL_SENT("Y");
         setLoTWQSLSDate(util->getDateFromLoTWQSLDateString(data));
     }

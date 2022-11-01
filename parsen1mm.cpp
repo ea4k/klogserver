@@ -34,12 +34,12 @@ ParseN1MM::~ParseN1MM(){}
 
 void ParseN1MM::parse(const QByteArray &msg)
 {
-     //qDebug() << Q_FUNC_INFO << ": " << QString::fromStdString(msg.toStdString());
+     qDebug() << Q_FUNC_INFO << ": " << QString::fromStdString(msg.toStdString());
      QXmlStreamReader xml(msg);
      while (!xml.atEnd()) {
-         //qDebug() << Q_FUNC_INFO << ": In the while";
+         qDebug() << Q_FUNC_INFO << ": In the while";
          xml.readNext();
-         //qDebug() << Q_FUNC_INFO << ": xml.name: " << xml.name();
+         qDebug() << Q_FUNC_INFO << ": xml.name: " << xml.name();
          if (xml.name() == "contactinfo")
          {
             parseXMLContact (xml); ;
@@ -48,23 +48,23 @@ void ParseN1MM::parse(const QByteArray &msg)
      }
 
      if (xml.hasError()) {
-         //qDebug() << xml.errorString() << xml.characterOffset();
+         qDebug() << xml.errorString() << xml.characterOffset();
      }
 }
 
 void ParseN1MM::parseXMLContact(QXmlStreamReader &_xml)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
 
     qso->clear ();
     while (!_xml.atEnd()) {
-        //qDebug() << Q_FUNC_INFO << ": In the while";
+        qDebug() << Q_FUNC_INFO << ": In the while";
         _xml.readNext();
         if (_xml.name () == "app")
         {
             if (_xml.readElementText () != "N1MM")
             {
-                //qDebug() << Q_FUNC_INFO << "Wrong APP!";
+                qDebug() << Q_FUNC_INFO << "Wrong APP!";
                 return;
             }
         }
@@ -82,17 +82,17 @@ void ParseN1MM::parseXMLContact(QXmlStreamReader &_xml)
         {   // TODO: import date / time
             // YYYY-MM-DD hh:mm:ss
             QString aux = _xml.readElementText ();
-            //qDebug() << Q_FUNC_INFO << "timeStamp: " << aux;
+            qDebug() << Q_FUNC_INFO << "timeStamp: " << aux;
 
             QDateTime dateTime = QDateTime::fromString (aux, "yyyy-MM-dd hh:mm:ss");
             if (dateTime.isValid ())
             {
-                //qDebug() << Q_FUNC_INFO << " - QDatetime not valid";
+                qDebug() << Q_FUNC_INFO << " - QDatetime not valid";
                 qso->setDateTimeOn (dateTime);
             }
             else
             {
-                //qDebug() << Q_FUNC_INFO << " - QDatetime not valid";
+                qDebug() << Q_FUNC_INFO << " - QDatetime not valid";
             }
         }
         else if (_xml.name () == "mycall")
@@ -306,11 +306,11 @@ void ParseN1MM::parseXMLContact(QXmlStreamReader &_xml)
         }
         else
         {
-            //qDebug() << Q_FUNC_INFO << ": Unknown name: " << _xml.name ();
+            qDebug() << Q_FUNC_INFO << ": Unknown name: " << _xml.name ();
         }
-        //qDebug() << Q_FUNC_INFO << ": name: " << _xml.name ();
-        //qDebug() << Q_FUNC_INFO << ": text: " << _xml.text ();
-        //qDebug() << Q_FUNC_INFO << ": readElementtext: " << _xml.readElementText ();
+        qDebug() << Q_FUNC_INFO << ": name: " << _xml.name ();
+        qDebug() << Q_FUNC_INFO << ": text: " << _xml.text ();
+        qDebug() << Q_FUNC_INFO << ": readElementtext: " << _xml.readElementText ();
     }
     emit logged_qso (qso);
 }

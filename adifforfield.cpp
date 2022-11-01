@@ -33,10 +33,10 @@ ADIFForField::ADIFForField()
 
 QString ADIFForField::getADIFForQSODate(const QString &_data, ExportMode _em)
 {
-    //qDebug() << Q_FUNC_INFO << ": " << _data;
+    qDebug() << Q_FUNC_INFO << ": " << _data;
     if (_data.length ()<1)
     {
-        //qDebug() << Q_FUNC_INFO << ": Empty string";
+        qDebug() << Q_FUNC_INFO << ": Empty string";
         return QString();
     }
     QString aux, result;
@@ -46,27 +46,27 @@ QString ADIFForField::getADIFForQSODate(const QString &_data, ExportMode _em)
 
     if (tDateTime.isValid())
     {
-        //qDebug() << Q_FUNC_INFO << ": Valid QDatetime";
+        qDebug() << Q_FUNC_INFO << ": Valid QDatetime";
         aux = util->getADIFDateFromQDateTime(tDateTime);
-        //qDebug() << Q_FUNC_INFO << ": Date to save: " << aux;
+        qDebug() << Q_FUNC_INFO << ": Date to save: " << aux;
         result = getADIFPair("QSO_DATE", aux);
         aux = util->getADIFTimeFromQDateTime(tDateTime);
-        //qDebug() << Q_FUNC_INFO << ": Time to save: " << aux;
+        qDebug() << Q_FUNC_INFO << ": Time to save: " << aux;
         if (_em == ModeEQSL)
         {
             aux.chop(2);
-            //qDebug() << Q_FUNC_INFO << ": Chopped Time to save: " << aux;
+            qDebug() << Q_FUNC_INFO << ": Chopped Time to save: " << aux;
         }
-        //qDebug() << Q_FUNC_INFO << ": " << result;
+        qDebug() << Q_FUNC_INFO << ": " << result;
         result = result + getADIFPair("TIME_ON", aux);
     }
-    //qDebug() << Q_FUNC_INFO << ": " << result;
+    qDebug() << Q_FUNC_INFO << ": " << result;
     return result;
 }
 
 QString ADIFForField::getADIFForCall(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO << ": " << _data;
+    qDebug() << Q_FUNC_INFO << ": " << _data;
     QString result;
     result.clear ();
     if (util->isValidCall(_data))
@@ -78,38 +78,38 @@ QString ADIFForField::getADIFForCall(const QString &_data)
 
 QString ADIFForField::getADIFForRSTSent(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     return getADIFPair("RST_SENT", _data);
 }
 
 QString ADIFForField::getADIFForRSTRcvd(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     return getADIFPair("RST_RCVD", _data);
 }
 
 QString ADIFForField::getADIFForBand(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     return getADIFPair("BAND", _data);
 }
 
 QString ADIFForField::getADIFForMode(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     //if ((aux.length()>1) && (dataProxy->getIdFromModeName(aux)>=0))
     return getADIFPair("MODE", _data);
 }
 
 QString ADIFForField::getADIFForSubMode(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     return getADIFPair("SUBMODE", _data);
 }
 
 QString ADIFForField::getADIFForCQz(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
 
     bool ok;
     int i = _data.toInt(&ok);
@@ -126,7 +126,7 @@ QString ADIFForField::getADIFForCQz(const QString &_data)
 
 QString ADIFForField::getADIFForITUz(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     bool ok;
     int i = _data.toInt(&ok);
     if (!ok)
@@ -142,7 +142,7 @@ QString ADIFForField::getADIFForITUz(const QString &_data)
 
 QString ADIFForField::getADIFForDXCC(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     QString result;
     result.clear ();
     if ( (0 < _data.toInt()) && (_data.toInt() < DXCCEntities+1) )
@@ -154,13 +154,13 @@ QString ADIFForField::getADIFForDXCC(const QString &_data)
 
 QString ADIFForField::getADIFForAddress(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     return getADIFPair("ADDRESS", _data);
 }
 
 QString ADIFForField::getADIFForAge(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     bool ok;
     int i = _data.toInt(&ok);
     if (!ok)
@@ -176,19 +176,19 @@ QString ADIFForField::getADIFForAge(const QString &_data)
 
 QString ADIFForField::getADIFForCNTY(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     return getADIFPair("CNTY", _data);
 }
 
 QString ADIFForField::getADIFForComment(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     return getADIFPair("COMMENT", _data);
 }
 
 QString ADIFForField::getADIFForA_Index(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     bool ok;
     float num = _data.toFloat(&ok);
     if (!ok)
@@ -204,7 +204,7 @@ QString ADIFForField::getADIFForA_Index(const QString &_data)
 
 QString ADIFForField::getADIFForAnt_az(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     //TODO: Normalize to 0-360
     bool ok;
     float num = _data.toFloat(&ok);
@@ -215,7 +215,7 @@ QString ADIFForField::getADIFForAnt_az(const QString &_data)
 
 QString ADIFForField::getADIFForAnt_el(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     //TODO: Normalize to -90 - 90
     bool ok;
     float num = _data.toFloat(&ok);
@@ -228,7 +228,7 @@ QString ADIFForField::getADIFForAnt_el(const QString &_data)
 
 QString ADIFForField::getADIFForAnt_path(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     QStringList validData;
     validData.clear ();
     validData << "G" << "O" << "S" << "L";
@@ -239,14 +239,14 @@ QString ADIFForField::getADIFForAnt_path(const QString &_data)
 
 QString ADIFForField::getADIFForARRL_sect(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     //TODO: Ensure the exported data is a valid ARRL SECT
     return getADIFPair("ARRL_SECT", _data);
 }
 
 QString ADIFForField::getADIFForGridSquare(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     //TODO: Ensure the exported data is a valid ARRL SECT
     if (!util->isValidGrid (_data))
         return QString();
@@ -254,7 +254,7 @@ QString ADIFForField::getADIFForGridSquare(const QString &_data)
 }
 QString ADIFForField::getADIFForMyGridSquare(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     //TODO: Ensure the exported data is a valid ARRL SECT
     if (!util->isValidGrid (_data))
         return QString();
@@ -263,7 +263,7 @@ QString ADIFForField::getADIFForMyGridSquare(const QString &_data)
 
 QString ADIFForField::getADIFForQSODateOff(const QString &_data, ExportMode _em)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     if (_data.length ()<1)
         return QString();
     QString aux, result;
@@ -279,16 +279,16 @@ QString ADIFForField::getADIFForQSODateOff(const QString &_data, ExportMode _em)
         {
             aux.chop(2);
         }
-        //qDebug() << Q_FUNC_INFO << ": " << result;
+        qDebug() << Q_FUNC_INFO << ": " << result;
         result = result + getADIFPair("TIME_OFF", aux);
     }
-    //qDebug() << Q_FUNC_INFO << ": " << result;
+    qDebug() << Q_FUNC_INFO << ": " << result;
     return result;
 }
 
 QString ADIFForField::getADIFForFreq(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     //TODO: Normalize to 0-360
     bool ok;
     float num = _data.toFloat(&ok);
@@ -303,7 +303,7 @@ QString ADIFForField::getADIFForFreq(const QString &_data)
 
 QString ADIFForField::getADIFForStationCallsign(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     QString result;
     result.clear ();
     if (util->isValidCall(_data))
@@ -315,7 +315,7 @@ QString ADIFForField::getADIFForStationCallsign(const QString &_data)
 
 QString ADIFForField::getADIFPair(const QString &_field, const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO << ": " << _field << "/" << _data;
+    qDebug() << Q_FUNC_INFO << ": " << _field << "/" << _data;
     int length = _data.length ();
     if (length<1)
     {
@@ -330,13 +330,13 @@ QString ADIFForField::getADIFPair(const QString &_field, const QString &_data)
 
 QString ADIFForField::getADIFForBandRX(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     return getADIFPair("BAND_RX", _data);
 }
 
 QString ADIFForField::getADIFForFreq_rx(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     //TODO: Normalize to 0-360
     bool ok;
     float num = _data.toFloat(&ok);
@@ -351,7 +351,7 @@ QString ADIFForField::getADIFForFreq_rx(const QString &_data)
 
 QString ADIFForField::getADIFForQSLRDate(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     if (_data.length ()<1)
         return QString();
 
@@ -365,13 +365,13 @@ QString ADIFForField::getADIFForQSLRDate(const QString &_data)
         aux = util->getADIFDateFromQDate (tDate);
         result = getADIFPair("QSLRDATE", aux);
       }
-    //qDebug() << Q_FUNC_INFO << ": " << result;
+    qDebug() << Q_FUNC_INFO << ": " << result;
     return result;
 }
 
 QString ADIFForField::getADIFForQSLSDate(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     if (_data.length ()<1)
         return QString();
 
@@ -385,13 +385,13 @@ QString ADIFForField::getADIFForQSLSDate(const QString &_data)
         aux = util->getADIFDateFromQDate (tDate);
         result = getADIFPair("QSLSDATE", aux);
       }
-    //qDebug() << Q_FUNC_INFO << ": " << result;
+    qDebug() << Q_FUNC_INFO << ": " << result;
     return result;
 }
 
 QString ADIFForField::getADIFForQSLRcvd(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     if (!util->isValidQSL_Rcvd (_data, false))
          return QString();
     return getADIFPair("QSL_RCVD", _data);
@@ -406,7 +406,7 @@ QString ADIFForField::getADIFForQSLSent(const QString &_data)
 
 QString ADIFForField::getADIFForLoTWRDate(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     if (_data.length ()<1)
         return QString();
 
@@ -425,7 +425,7 @@ QString ADIFForField::getADIFForLoTWRDate(const QString &_data)
 
 QString ADIFForField::getADIFForLoTWSDate(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     if (_data.length ()<1)
         return QString();
 
@@ -444,7 +444,7 @@ QString ADIFForField::getADIFForLoTWSDate(const QString &_data)
 
 QString ADIFForField::getADIFForLoTWQSLRcvd(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     if (!util->isValidQSL_Rcvd (_data, false))
          return QString();
     return getADIFPair("LOTW_QSL_RCVD", _data);
@@ -459,7 +459,7 @@ QString ADIFForField::getADIFForLoTWQSLSent(const QString &_data)
 
 QString ADIFForField::getADIFForClubLogQSOUploadDate(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     if (_data.length ()<1)
         return QString();
 
@@ -485,7 +485,7 @@ QString ADIFForField::getADIFForClubLogQSOUploadStatus(const QString &_data)
 
 QString ADIFForField::getADIFForHRDLogQSOUploadDate(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     if (_data.length ()<1)
         return QString();
 
@@ -511,7 +511,7 @@ QString ADIFForField::getADIFForHRDLogQSOUploadStatus(const QString &_data)
 
 QString ADIFForField::getADIFForQRZCOMQSOUploadDate(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     if (_data.length ()<1)
         return QString();
 
@@ -551,7 +551,7 @@ QString ADIFForField::getADIFForAward_Granted(const QString &_data)
 
 QString ADIFForField::getADIFForEQSL_QSLRDate(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     if (_data.length ()<1)
         return QString();
 
@@ -570,7 +570,7 @@ QString ADIFForField::getADIFForEQSL_QSLRDate(const QString &_data)
 
 QString ADIFForField::getADIFForEQSL_QSLSDate(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     if (_data.length ()<1)
         return QString();
 
@@ -589,7 +589,7 @@ QString ADIFForField::getADIFForEQSL_QSLSDate(const QString &_data)
 
 QString ADIFForField::getADIFForEQSL_QSLRCVD(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO;
     if (!util->isValidQSL_Rcvd (_data, false))
          return QString();
     return getADIFPair("EQSL_QSL_RCVD", _data);
@@ -671,7 +671,7 @@ QString ADIFForField::getADIFForSRx(const QString &_data)
 
 QString ADIFForField::getADIFForSTx(const QString &_data)
 {
-    //qDebug() << Q_FUNC_INFO << ": " << _data;
+    qDebug() << Q_FUNC_INFO << ": " << _data;
     bool ok;
     int i = _data.toInt(&ok);
     if (!ok)
