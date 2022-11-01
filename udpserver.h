@@ -50,7 +50,7 @@ public:
     void setLogging(const bool _t);
     void setRealTimeUpdate(const bool _t);
     //void setAddress(const QString &_address);
-    void setPort(const int _port);
+    bool setPort(const int _port);
     void setNetworkInterface(const QString &_t);
 
 private:

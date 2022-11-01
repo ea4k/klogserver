@@ -86,7 +86,6 @@ bool UDPServer::start()
     {
          //qDebug() << "UDPServer::start: calling startNow " ;
         return startNow(port, groupAddress);
-
     }
     else
     {
@@ -129,7 +128,6 @@ bool UDPServer::startNow(quint16 _port, QHostAddress const& _multicast_group_add
     }
      //qDebug() << "UDPServer::startNow exiting... ";
     return  socketServer->isValid();
-
 }
 
 void UDPServer::joinMultiCastGroup()
@@ -254,13 +252,15 @@ bool UDPServer::stop()
     }
 }
 
-void UDPServer::setPort(const int _port)
+bool UDPServer::setPort(const int _port)
 {
         //qDebug() << "UDPServer::setPort: " << QString::number(_port) ;
     if ((_port >= 0) && (_port<=65535))
     {
         port = _port;
+        return true;
     }
+    return false;
 }
 
 void UDPServer::setNetworkInterface(const QString &_t)

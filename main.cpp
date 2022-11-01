@@ -33,12 +33,13 @@
 void showHelp()
 {
     QTextStream cout(stdout);
-    cout << "Usage: klog [OPTION]...";
-    cout << "Options:" ;
-    cout << "     -?           Display this help" ;
-    cout << "     -h           Display this help";
-    cout << "     --help       Display this help";
-    cout << "     -v           Display program version";
+    cout << "Usage: klog [OPTION]...\n";
+    cout << "Options:\n" ;
+    cout << "     -?           Display this help\n" ;
+    cout << "     -h           Display this help\n";
+    cout << "     --help       Display this help\n";
+    cout << "     -v           Display program version\n";
+    cout << "     -p port      Defines the UDP port to listen (default 2237)\n";
 }
 
 int main(int argc, char *argv[])
@@ -48,6 +49,7 @@ int main(int argc, char *argv[])
     app.setOrganizationName("EA4K");
     app.setOrganizationDomain("klog.xyz");
     app.setApplicationVersion(QString(APP_VERSION));
+    int port = 2237;
     QStringList arguments;
     QTextStream cout(stdout);
     arguments.clear();

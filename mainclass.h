@@ -35,7 +35,7 @@ class MainClass : public QObject
     Q_OBJECT
 public:
     explicit MainClass(QObject *parent = nullptr);
-
+    void setPort (const int _p);
 private slots:
     //void slotWSJTXQSOReceived(QSO _qso) ;
 

@@ -30,17 +30,27 @@ MainClass::MainClass(QObject *parent) : QObject(parent)
     fileManager = new FileManager;
     udpserver = new UDPServer;
     udpserver->setNetworkInterface("lo0");
-    udpserver->setPort (12060);
-    //udpserver->setPort (2237);
+    //udpserver->setPort (12060);
+    udpserver->setPort (2237);
     if (udpserver->start())
-    {qDebug() << Q_FUNC_INFO << ": Start OK";}
+    {
+        qDebug() << Q_FUNC_INFO << ": Started OK";
+    }
     else
     {
-        //qDebug() << Q_FUNC_INFO << ": Start NOK";
+        qDebug() << Q_FUNC_INFO << ": Start NOK";
     }
-
     //Qt::ConnectionType ctype = Qt::DirectConnection;
     //connect(udpserver, SIGNAL(logged_qso(QSO)), this, SLOT(slotWSJTXQSOReceived(QSO)), ctype);
+}
+
+void MainClass::setPort (const int _p)
+{
+    if (udpserver->setPort (_p))
+    {
+        udpserver->stop();
+        udpserver->start();
+    }
 }
 
 
