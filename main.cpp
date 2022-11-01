@@ -39,7 +39,7 @@ void showHelp()
     cout << "     -h           Display this help\n";
     cout << "     --help       Display this help\n";
     cout << "     -v           Display program version\n";
-    cout << "     -p port      Defines the UDP port to listen (default 2237)\n";
+    //cout << "     -p port      Defines the UDP port to listen (default 2237)\n";
 }
 
 int main(int argc, char *argv[])
@@ -72,6 +72,10 @@ int main(int argc, char *argv[])
         {
             cout << "Version: KLogServer-" << app.applicationVersion() << QT_ENDL;
         }
+        //else if (arguments.contains("-p"))
+        //{
+        //    port =
+        //}
         else
         {
             showHelp();
@@ -80,6 +84,10 @@ int main(int argc, char *argv[])
         return 0;
     }
     MainClass main;
+    if (port!=2237)
+    {
+        main.setPort (port);
+    }
     return app.exec();
 }
 
