@@ -17,8 +17,9 @@ Check https://jaime.robles.es for the author homepage.
 Read the Changelog (windows users, rename to Changelog.txt) to see the changes from one version to another.
 
 ## Running KLogServer
- klogserver -i interface -p port
- klogserver -h for help.
+You can run:
+ - klogserver -i interface -p port
+ - klogserver -h for help.
 
 ## Contact
 
