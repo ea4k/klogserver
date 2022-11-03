@@ -7,7 +7,7 @@ KLogServer runs from the command line as it is intended to be executed unattende
 
 It can be used as a backup for your log during normal operations or contests.
 
-Today it supports QSO data coming from WSJT-X and N1MM but ther programs sending data will be added.
+Today it supports QSO data coming from WSJT-X and N1MM but other programs sending data will be added.
 
 The objective of KLogServer is to provide a free software that runs in Linux, macOS and Windows.
 
