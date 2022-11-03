@@ -7,7 +7,7 @@ It can be used as a backup for your log during normal operations or contests.
 
 Today it supports QSO data coming from WSJT-X and N1MM but ther programs sending data will be added.
 
-== Running KLogServer ==
+## Running KLogServer ##
  klogserver -i interface -p port
  klogserver -h for help.
  
