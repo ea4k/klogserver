@@ -51,7 +51,7 @@ public:
     void setRealTimeUpdate(const bool _t);
     //void setAddress(const QString &_address);
     bool setPort(const int _port);
-    void setNetworkInterface(const QString &_t);
+    bool setNetworkInterface(const QString &_t);
 
 private:
     void readPendingDatagrams();

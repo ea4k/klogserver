@@ -53,4 +53,16 @@ void MainClass::setPort (const int _p)
     }
 }
 
+void  MainClass::setInterface (const QString &_i)
+{
+    if (_i.length ()>0)
+    {
+        if (udpserver->setNetworkInterface (_i))
+        {
+            udpserver->stop();
+            udpserver->start();
+        }
+    }
+}
+
 

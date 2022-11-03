@@ -36,6 +36,7 @@ class MainClass : public QObject
 public:
     explicit MainClass(QObject *parent = nullptr);
     void setPort (const int _p);
+    void setInterface (const QString &_i);
 private slots:
     //void slotWSJTXQSOReceived(QSO _qso) ;
 

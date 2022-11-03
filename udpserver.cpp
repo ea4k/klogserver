@@ -263,7 +263,7 @@ bool UDPServer::setPort(const int _port)
     return false;
 }
 
-void UDPServer::setNetworkInterface(const QString &_t)
+bool UDPServer::setNetworkInterface(const QString &_t)
 {
      qDebug() << "UDPServer::setNetworkInterface: " << _t ;
     QString testInterface;
@@ -281,10 +281,11 @@ void UDPServer::setNetworkInterface(const QString &_t)
             {
                 networkInterface = i;
                 haveNetworkInterface = true;
+                return true;
             }
-
         }
     }
+    return false;
 }
 
 void UDPServer::setLogging(const bool _t)
