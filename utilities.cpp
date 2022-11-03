@@ -1968,3 +1968,47 @@ QString Utilities::getLogColumnName(const QString &_column)
         return _column;
     }
 }
+
+QString Utilities::getBandFromFreq(const int _f)
+{// Freq in MHz
+    switch (_f)
+    {
+        case 28:
+        {
+            return "10m";
+        }
+        case 24:
+        {
+            return "12m";
+        }
+        case 21:
+        {
+            return "15m";
+        }
+        case 18:
+        {
+            return "17m";
+        }
+        case 14:
+        {
+            return "20m";
+        }
+        case 10:
+        {
+            return "30m";
+        }
+        case 7:
+        {
+            return "40m";
+        }
+        case 3:
+        {
+            return "80m";
+        }
+        case 1:
+        {
+            return "160m";
+        }
+    }
+    return QString();
+}

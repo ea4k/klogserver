@@ -147,6 +147,7 @@ public:
     bool isValidCQ(const int _cq);
     bool isValidITU(const int _itu);
     bool isValidAge(const int _age);
+    QString getBandFromFreq(const int _f); // Freq in MHz
     //QPalette getPalete(bool _ok);
 private:
     void init();

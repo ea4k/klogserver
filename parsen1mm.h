@@ -42,6 +42,7 @@ public:
 private:
     void parseXMLContact(QXmlStreamReader &_xml);
     QSO *qso;
+    Utilities util;
 signals:
     void logged_qso (QSO *_qso);
 };

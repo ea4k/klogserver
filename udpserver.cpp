@@ -58,8 +58,10 @@ UDPServer::UDPServer(QObject *parent) :
     parseWSJTX = new ParseWSJTX;
 
     connect(socketServer,SIGNAL(readyRead()),this,SLOT(slotReadPendingDatagrams()));
-    //connect(parseWSJTX,SIGNAL(logged_qso(QSO)),this,SLOT(slotLoggedQSO(QSO)));
+
     connect(parseN1MM,SIGNAL(logged_qso(QSO*)),this,SLOT(slotLoggedQSO(QSO*)));
+    connect(parseWSJTX,SIGNAL(logged_qso(QSO*)),this,SLOT(slotLoggedQSO(QSO*)));
+
 }
 
 void UDPServer::slotReadPendingDatagrams()
@@ -200,8 +202,8 @@ bool UDPServer::isStarted()
 
 void UDPServer::parse(const QByteArray &msg)
 {
-    qDebug() << "UDPServer::parse: " << msg ;
-    qDebug() << "UDPServer::parse: " << QString::fromStdString(msg.toStdString());
+    //qDebug() << "UDPServer::parse: " << msg ;
+    //qDebug() << "UDPServer::parse: " << QString::fromStdString(msg.toStdString());
     //in >> time_off >> dx_call >> dx_grid >> frequency >> mode >> report_sent >> report_received >>
     //        tx_power >> comments >> name >> time_on >> operatorCall >> de_call >> de_grid >>
     //        exchange_sent >> exchange_received;
@@ -235,7 +237,7 @@ void UDPServer::parse(const QByteArray &msg)
         parseWSJTX->parse(msg);
         return;
     }
-    qDebug() << "UDPServer::parse: TYPE: " << QString::number(type);
+    //qDebug() << "UDPServer::parse: TYPE: " << QString::number(type);
 }
 
 bool UDPServer::stop()

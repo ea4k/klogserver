@@ -102,31 +102,8 @@ void ParseN1MM::parseXMLContact(QXmlStreamReader &_xml)
         else if (_xml.name () == "band")
         {   //TODO:  14, 28,...
             QString aux = _xml.readElementText ();
-
-            if (aux == "28")
-            {
-                qso->setBand ("10M");
-            }
-            else if (aux == "21")
-            {
-                qso->setBand ("15M");
-            }
-            else if (aux == "14")
-            {
-                qso->setBand ("20M");
-            }
-            else if (aux == "7")
-            {
-                qso->setBand ("40M");
-            }
-            else if (aux == "3,5")
-            {
-                qso->setBand ("80M");
-            }
-            else if (aux == "1,8")
-            {
-                qso->setBand ("160M");
-            }
+            int freqInt = aux.toInt ();
+            qso->setBand (util.getBandFromFreq (freqInt));
         }
         else if (_xml.name () == "rxfreq")
         {

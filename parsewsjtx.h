@@ -72,9 +72,11 @@ public:
     void parse(const QByteArray &msg);
 
 private:
+    QSO *qso;
+    Utilities util;
 
 signals:
-    void logged_qso (QSO &_qso);
+    void logged_qso (QSO *_qso);
 };
 
 #endif // PARSEWSJTX_H
