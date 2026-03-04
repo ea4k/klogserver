@@ -30,7 +30,6 @@
 #include <QDate>
 #include <QTime>
 #include <QDebug>
-#include "adifforfield.h"
 #include "utilities.h"
 
 class QSO : public QObject

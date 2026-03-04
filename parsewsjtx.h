@@ -33,13 +33,11 @@
 #include <QDateTime>
 #include <QDate>
 #include <QTime>
-#include "locator.h"
 #include <QtDebug>
 #include <QDataStream>
 #include "utilities.h"
 #include "qso.h"
 
-#include "klogdefinitions.h"
 
 enum Type
     {

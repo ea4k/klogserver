@@ -34,11 +34,11 @@ MainClass::MainClass(QObject *parent) : QObject(parent)
     udpserver->setPort (2237);
     if (udpserver->start())
     {
-        qDebug() << Q_FUNC_INFO << ": Started OK";
+       //qDebug() << Q_FUNC_INFO << ": Started OK";
     }
     else
     {
-        qDebug() << Q_FUNC_INFO << ": Start NOK";
+       //qDebug() << Q_FUNC_INFO << ": Start NOK";
     }
     //Qt::ConnectionType ctype = Qt::DirectConnection;
     //connect(udpserver, SIGNAL(logged_qso(QSO)), this, SLOT(slotWSJTXQSOReceived(QSO)), ctype);

@@ -32,7 +32,7 @@
 UDPServer::UDPServer(QObject *parent) :
     QObject(parent)
 {
-        qDebug() << "UDPServer::UDPServer"  ;
+       //qDebug() << "UDPServer::UDPServer"  ;
        //address = QString("127.0.0.1");
     lastQso = new QSO;
     port = 2237;
@@ -44,11 +44,11 @@ UDPServer::UDPServer(QObject *parent) :
        //if (socketServer->bind(QHostAddress::AnyIPv4, port, QAbstractSocket::ShareAddress))
        if (socketServer->bind(port, QAbstractSocket::ShareAddress))
        {
-             qDebug() << "UDPServer::UDPServer - Multicast group joined OK"  ;
+            //qDebug() << "UDPServer::UDPServer - Multicast group joined OK"  ;
        }
        else
        {
-             qDebug() << "UDPServer::UDPServer - Multicast group joined NOK"  ;
+            //qDebug() << "UDPServer::UDPServer - Multicast group joined NOK"  ;
        }
        */
     util = new Utilities;
@@ -66,52 +66,52 @@ UDPServer::UDPServer(QObject *parent) :
 
 void UDPServer::slotReadPendingDatagrams()
 {
-    qDebug() << Q_FUNC_INFO;
+   //qDebug() << Q_FUNC_INFO;
     while (socketServer->hasPendingDatagrams()) {
         QByteArray datagram;
         datagram.resize(socketServer->pendingDatagramSize());
         QHostAddress sender;
         quint16 senderPort;
-        qDebug() << "UDPServer::slotReadPendingDatagrams: length = " << QString::number(socketServer->pendingDatagramSize()) ;
+       //qDebug() << "UDPServer::slotReadPendingDatagrams: length = " << QString::number(socketServer->pendingDatagramSize()) ;
         socketServer->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
         parse (datagram);
-        qDebug() << "UDPServer::slotReadPendingDatagrams: = " << datagram ;
+       //qDebug() << "UDPServer::slotReadPendingDatagrams: = " << datagram ;
     }
 
-    qDebug() << Q_FUNC_INFO << " - END";
+   //qDebug() << Q_FUNC_INFO << " - END";
 }
 
 bool UDPServer::start()
 {
-     qDebug() << "UDPServer::start " ;
+    //qDebug() << "UDPServer::start " ;
     if ( (port>0) && (port<65535) )
     {
-         qDebug() << "UDPServer::start: calling startNow " ;
+        //qDebug() << "UDPServer::start: calling startNow " ;
         return startNow(port, groupAddress);
     }
     else
     {
-         qDebug() << "UDPServer::start FALSE" ;
+        //qDebug() << "UDPServer::start FALSE" ;
         return false;
     }
 }
 
 bool UDPServer::startNow(quint16 _port, QHostAddress const& _multicast_group_address)
 {
-     qDebug() << "UDPServer::startNow ";
+    //qDebug() << "UDPServer::startNow ";
     //if ((_port != port) || (_multicast_group_address != groupAddress))
     if (1)
     {
-         qDebug() << "UDPServer::startNow starting...";
+        //qDebug() << "UDPServer::startNow starting...";
         leaveMultiCastGroup();
         if (socketServer->state() == QAbstractSocket::BoundState)
         {
-             qDebug() << "UDPServer::startNow: closing socket";
+            //qDebug() << "UDPServer::startNow: closing socket";
             socketServer->close();
         }
         groupAddress = _multicast_group_address;
-        auto address = _multicast_group_address.isNull ()
-                || QAbstractSocket::IPv4Protocol != groupAddress.protocol () ? QHostAddress::Any : QHostAddress::AnyIPv4;
+        //auto address = _multicast_group_address.isNull ()
+        //        || QAbstractSocket::IPv4Protocol != groupAddress.protocol () ? QHostAddress::Any : QHostAddress::AnyIPv4;
         if (_port && socketServer->bind(groupAddress, _port, QAbstractSocket::ShareAddress | QAbstractSocket::ReuseAddressHint))
         {
             port = _port;
@@ -120,21 +120,21 @@ bool UDPServer::startNow(quint16 _port, QHostAddress const& _multicast_group_add
         }
         else
         {
-             qDebug() << "UDPServer::startNow port = 0";
+            //qDebug() << "UDPServer::startNow port = 0";
             port = 0;
         }
     }
     else
     {
-        qDebug() << "UDPServer::startNow exiting... ";
+       //qDebug() << "UDPServer::startNow exiting... ";
     }
-     qDebug() << "UDPServer::startNow exiting... ";
+    //qDebug() << "UDPServer::startNow exiting... ";
     return  socketServer->isValid();
 }
 
 void UDPServer::joinMultiCastGroup()
 {
-     qDebug() << "UDPServer::joinMultiCastGroup: ";
+    //qDebug() << "UDPServer::joinMultiCastGroup: ";
     if (!haveNetworkInterface)
     {
         return;
@@ -149,7 +149,7 @@ void UDPServer::joinMultiCastGroup()
             socketServer->bind(QHostAddress::AnyIPv4, port, QAbstractSocket::ShareAddress | QAbstractSocket::ReuseAddressHint);
             if (socketServer->isValid())
             {
-                qDebug() << "UDPServer::joinMultiCastGroup socket valid";
+               //qDebug() << "UDPServer::joinMultiCastGroup socket valid";
             }
 
         }
@@ -176,12 +176,12 @@ void UDPServer::joinMultiCastGroup()
         }
         socketServer->setMulticastInterface(mcast_interface);
     }
-     qDebug() << "UDPServer::joinMultiCastGroup - END";
+    //qDebug() << "UDPServer::joinMultiCastGroup - END";
 }
 
 void UDPServer::leaveMultiCastGroup()
 {
-    qDebug() << "UDPServer::leaveMultiCastGroup";
+   //qDebug() << "UDPServer::leaveMultiCastGroup";
     if (groupAddress.isNull() && socketServer->state() && groupAddress.isMulticast())
     {
         QList<QNetworkInterface> interfaces;
@@ -192,7 +192,7 @@ void UDPServer::leaveMultiCastGroup()
             socketServer->leaveMulticastGroup(groupAddress, interfaces.at(i));
         }
     }
-    qDebug() << "UDPServer::leaveMultiCastGroup - END";
+   //qDebug() << "UDPServer::leaveMultiCastGroup - END";
 }
 
 bool UDPServer::isStarted()
@@ -218,21 +218,21 @@ void UDPServer::parse(const QByteArray &msg)
     in.setByteOrder(QDataStream::BigEndian);
     in >> magic >> schema >> type >> id;
 
-     qDebug() << "UDPServer::parse: -  Magic = " << QString::number(magic);
-     qDebug() << "UDPServer::parse: - schema = " << QString::number(schema);
-     qDebug() << "UDPServer::parse: -   type = " << QString::number(type);
-     qDebug() << "UDPServer::parse: -   id = " << id ;
+    //qDebug() << "UDPServer::parse: -  Magic = " << QString::number(magic);
+    //qDebug() << "UDPServer::parse: - schema = " << QString::number(schema);
+    //qDebug() << "UDPServer::parse: -   type = " << QString::number(type);
+    //qDebug() << "UDPServer::parse: -   id = " << id ;
 
     if (msg.startsWith ("<?xml"))
     {
-        qDebug() << Q_FUNC_INFO << ": N1MM detected! *******************************";
+       //qDebug() << Q_FUNC_INFO << ": N1MM detected! *******************************";
 
         parseN1MM->parse(msg);
         return;
     }
     else if (magic == 2914831322)
     {
-        qDebug() << "UDPServer::parse: - Magic WSJTX = " << QString::number(magic);
+       //qDebug() << "UDPServer::parse: - Magic WSJTX = " << QString::number(magic);
 
         parseWSJTX->parse(msg);
         return;
@@ -242,7 +242,7 @@ void UDPServer::parse(const QByteArray &msg)
 
 bool UDPServer::stop()
 {
-     qDebug() << "UDPServer::stop";
+    //qDebug() << "UDPServer::stop";
     socketServer->close();
     if (socketServer->isValid())
     {
@@ -256,7 +256,7 @@ bool UDPServer::stop()
 
 bool UDPServer::setPort(const int _port)
 {
-        qDebug() << "UDPServer::setPort: " << QString::number(_port) ;
+       //qDebug() << "UDPServer::setPort: " << QString::number(_port) ;
     if ((_port >= 0) && (_port<=65535))
     {
         port = _port;
@@ -267,7 +267,7 @@ bool UDPServer::setPort(const int _port)
 
 bool UDPServer::setNetworkInterface(const QString &_t)
 {
-     qDebug() << "UDPServer::setNetworkInterface: " << _t ;
+    //qDebug() << "UDPServer::setNetworkInterface: " << _t ;
     QString testInterface;
     testInterface.clear();
     QList<QNetworkInterface> ifaces;
@@ -278,7 +278,7 @@ bool UDPServer::setNetworkInterface(const QString &_t)
         testInterface = i.humanReadableName() + "-" + i.hardwareAddress();
         if (testInterface.contains(_t))
         {
-             qDebug() << "UDPServer::setNetworkInterface: FOUND! " << testInterface  ;
+            //qDebug() << "UDPServer::setNetworkInterface: FOUND! " << testInterface  ;
             if ((i.flags().testFlag(QNetworkInterface::IsUp)) )
             {
                 networkInterface = i;
@@ -292,40 +292,40 @@ bool UDPServer::setNetworkInterface(const QString &_t)
 
 void UDPServer::setLogging(const bool _t)
 {
-        qDebug() << "UDPServer::setLogging: " <<   endl;
+       //qDebug() << "UDPServer::setLogging: ";
     if (_t)
     {
-            qDebug() << "UDPServer::setLogging: TRUE " <<   endl;
+           //qDebug() << "UDPServer::setLogging: TRUE ";
     }
     else
     {
-            qDebug() << "UDPServer::setLogging: FALSE" <<   endl;
+           //qDebug() << "UDPServer::setLogging: FALSE";
     }
     logging = _t;
 }
 
 void UDPServer::setRealTimeUpdate(const bool _t)
 {
-        qDebug() << "UDPServer::setRealTimeUpdate: " <<   endl;
+       //qDebug() << "UDPServer::setRealTimeUpdate: ";
     if (_t)
     {
-            qDebug() << "UDPServer::setRealTimeUpdate: TRUE " <<   endl;
+           //qDebug() << "UDPServer::setRealTimeUpdate: TRUE ";
     }
     else
     {
-            qDebug() << "UDPServer::setRealTimeUpdate: FALSE" <<   endl;
+           //qDebug() << "UDPServer::setRealTimeUpdate: FALSE";
     }
        realtime = _t;
 }
 
 void UDPServer::slotLoggedQSO(QSO *_qso)
 {
-    qDebug() << Q_FUNC_INFO;
+   //qDebug() << Q_FUNC_INFO;
     //QSO qso = _qso;
 
     if (lastQso->isSame (_qso))
     {
-        qDebug() << Q_FUNC_INFO << ": Same QSO, exitting!";
+       //qDebug() << Q_FUNC_INFO << ": Same QSO, exitting!";
         return;
     }
 
@@ -336,7 +336,7 @@ void UDPServer::slotLoggedQSO(QSO *_qso)
 
     if (!_qso->isValid ())
     {
-        qDebug() << Q_FUNC_INFO << ": Not valid QSO, exitting!";
+       //qDebug() << Q_FUNC_INFO << ": Not valid QSO, exitting!";
         return;
     }
 
@@ -344,5 +344,5 @@ void UDPServer::slotLoggedQSO(QSO *_qso)
     fileManager.saveQSO(_qso);
     _qso->clear ();
 
-    qDebug() << Q_FUNC_INFO << " - END";
+   //qDebug() << Q_FUNC_INFO << " - END";
 }
