@@ -7,7 +7,12 @@ KLogServer runs from the command line as it is intended to be executed unattende
 
 It can be used as a backup for your log during normal operations or contests.
 
-Today it supports QSO data coming from WSJT-X and N1MM but other programs sending data will be added.
+Today it supports QSO data coming from WSJT-X, N1MM and KLog but other programs sending data will be added.
+
+KLog sends every QSO that is logged as a plain ADIF record, in one UDP datagram, with all the ADIF
+fields that have data. The record is appended to the ADIF file just as it is received, so no field
+is lost. It is enabled in KLog in Settings->WSJT-X->KLogServer, where the server (IP address or
+hostname) and the UDP port where KLogServer is listening are also configured.
 
 The objective of KLogServer is to provide a free software that runs in Linux, macOS and Windows.
 

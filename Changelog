@@ -1,3 +1,9 @@
+TBD - 0.3
+- Receives QSOs from KLog and stores the data in an ADIF file. KLog sends the QSOs
+  that are logged as an ADIF record with all the fields that have data and the record
+  is saved just as it is received, so no ADIF field is lost.
+- Bugfix: The N1MM parser did not build with Qt6.
+
 Mar 2026 - 0.2
 - Migrated to Qt6
 

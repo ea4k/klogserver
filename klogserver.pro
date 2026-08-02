@@ -44,6 +44,7 @@ SOURCES += \
         locator.cpp \
         main.cpp \
         mainclass.cpp \
+        parseadif.cpp \
         parsen1mm.cpp \
         parsewsjtx.cpp \
         qso.cpp \
@@ -68,6 +69,7 @@ HEADERS += \
     klogdefinitions.h \
     locator.h \
     mainclass.h \
+    parseadif.h \
     parsen1mm.h \
     parsewsjtx.h \
     qso.h \

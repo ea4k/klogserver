@@ -1,10 +1,8 @@
-#ifndef FILEMANAGER_H
-#define FILEMANAGER_H
 /***************************************************************************
-                          filemanager.h  -  description
+                          parseadif.h  -  description
                              -------------------
-    begin                : aug 2021
-    copyright            : (C) 2021 by Jaime Robles
+    begin                : aug 2026
+    copyright            : (C) 2026 by Jaime Robles
     user                 : jaime@robles.es
  ***************************************************************************/
 
@@ -25,20 +23,47 @@
  *    along with KLogServer.  If not, see <https://www.gnu.org/licenses/>.   *
  *                                                                           *
  *****************************************************************************/
-#include <QFile>
+#ifndef PARSEADIF_H
+#define PARSEADIF_H
+
+// Parses the QSOs that KLog sends to KLogServer.
+//
+// KLog sends one QSO per datagram, as a plain ADIF record with all the ADIF
+// fields that have data, so the record is passed along untouched to be saved:
+// the QSO class only models a few fields and rebuilding the record from it
+// would drop all the others.
+
+#include <QObject>
+#include <QPair>
+#include <QString>
+#include <QStringList>
+#include <QtGlobal>
+#include "utilities.h"
 #include "qso.h"
 
-class FileManager
+class ParseADIF : public QObject
 {
+    Q_OBJECT
 public:
-    FileManager();
-    bool saveQSO(QSO *_qso);
-    // Appends an ADIF record that has been received already formatted
-    bool saveADIF(const QString &_adifRecord);
-    bool setFileName (const QString &_fn);
+    ParseADIF();
+    ~ParseADIF();
+
+    // True when the datagram looks like an ADIF record instead of WSJT-X or N1MM data
+    static bool isADIF(const QByteArray &_msg);
+
+    void parse(const QByteArray &_msg);
 
 private:
-    QString fileName;
+    // Returns the fields of the first complete record found, or an empty list
+    // if there is no <EOR>. _record gets the record just as it was received.
+    QList<QPair<QString, QString> > getFields(const QString &_data, QString &_record) const;
+
+    QSO *qso;
+    Utilities util;
+
+signals:
+    // The record is emitted verbatim; the QSO is provided to detect duplicates
+    void logged_adif (const QString &_adifRecord, QSO *_qso);
 };
 
-#endif // FILEMANAGER_H
+#endif // PARSEADIF_H
