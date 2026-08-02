@@ -32,8 +32,19 @@ FileManager::FileManager()
 
 bool FileManager::saveQSO(QSO *_qso)
 {
-
    //qDebug() << Q_FUNC_INFO << ": " << _qso->getCall();
+    return saveADIF(_qso->getADIF());
+}
+
+bool FileManager::saveADIF(const QString &_adifRecord)
+{
+    QString aux = _adifRecord.trimmed();
+    if (aux.length()<3)
+    {
+       //qDebug() << Q_FUNC_INFO << ": Empty QSO, not saved";
+        return false;
+    }
+
     QFile file(fileName);
     if (!(file.open(QIODevice::WriteOnly | QIODevice::Append)))
     {
@@ -41,12 +52,6 @@ bool FileManager::saveQSO(QSO *_qso)
         return false;
     }
 
-    QString aux = _qso->getADIF();
-    if (aux.length()<3)
-    {
-       //qDebug() << Q_FUNC_INFO << ": Empty QSO, not saved";
-        return false;
-    }
    //qDebug() << Q_FUNC_INFO << ": We have the ADIF: " << aux;
     QTextStream out(&file);
     out << aux << Qt::endl;

@@ -32,6 +32,7 @@
 #include <QHostAddress>
 #include <QDataStream>
 #include "utilities.h"
+#include "parseadif.h"
 #include "parsen1mm.h"
 #include "parsewsjtx.h"
 #include "filemanager.h"
@@ -74,6 +75,7 @@ private:
     Utilities *util;
     ParseWSJTX *parseWSJTX;
     ParseN1MM *parseN1MM;
+    ParseADIF *parseADIF;
 
 #if QT_VERSION >= 0x050400
     static quint32 constexpr schema_number {3};
@@ -90,6 +92,7 @@ signals:
 private slots:
     void slotReadPendingDatagrams();
     void slotLoggedQSO(QSO *_qso);
+    void slotLoggedADIF(const QString &_adifRecord, QSO *_qso);
 };
 
 #endif // UDPSERVER_H
