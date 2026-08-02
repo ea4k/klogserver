@@ -32,21 +32,49 @@ ParseADIF::ParseADIF()
 
 ParseADIF::~ParseADIF(){}
 
-bool ParseADIF::isADIF(const QByteArray &_msg)
-{
-    const QByteArray msg = _msg.trimmed();
-    if (!msg.startsWith('<'))
-        return false;
-    if (msg.startsWith("<?xml"))    // N1MM
-        return false;
-    return msg.toUpper().contains("<EOR>");
-}
-
 void ParseADIF::parse(const QByteArray &_msg)
 {
    //qDebug() << Q_FUNC_INFO << ": " << _msg;
+    quint32 magic;
+    quint32 schema;
+    quint32 type;
+    QByteArray id;
+    QByteArray adifReceived;
+
+    QDataStream in(_msg);
+    in.setVersion(16);      // Qt_5_4, the stream version used by the schema 3
+    in.setByteOrder(QDataStream::BigEndian);
+
+    in >> magic >> schema >> type >> id;
+   //qDebug() << Q_FUNC_INFO << ": -  Magic = " << QString::number(magic);
+   //qDebug() << Q_FUNC_INFO << ": - schema = " << QString::number(schema);
+   //qDebug() << Q_FUNC_INFO << ": -   type = " << QString::number(type);
+   //qDebug() << Q_FUNC_INFO << ": -     id = " << id;
+
+    if (magic != magicNumber)
+    {
+       //qDebug() << Q_FUNC_INFO << ": - Magic BAD FORMAT = " << QString::number(magic);
+        return;
+    }
+
+    switch (type)
+    {
+        case ADIFLogged:
+        {
+            in >> adifReceived;
+            parseADIFRecord(QString::fromUtf8(adifReceived));
+            break;
+        }
+        default:
+           //qDebug() << Q_FUNC_INFO << ": -   type = " << QString::number(type) << " - Unknown type";
+        break;
+    }
+}
+
+void ParseADIF::parseADIFRecord(const QString &_data)
+{
     QString record;
-    const QList<QPair<QString, QString> > fields = getFields(QString::fromUtf8(_msg), record);
+    const QList<QPair<QString, QString> > fields = getFields(_data, record);
     if (fields.isEmpty())
     {
        //qDebug() << Q_FUNC_INFO << ": No complete ADIF record received";

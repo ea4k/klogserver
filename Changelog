@@ -1,7 +1,8 @@
 TBD - 0.3
 - Receives QSOs from KLog and stores the data in an ADIF file. KLog sends the QSOs
   that are logged as an ADIF record with all the fields that have data and the record
-  is saved just as it is received, so no ADIF field is lost.
+  is saved just as it is received, so no ADIF field is lost. The datagram has the same
+  layout that WSJT-X uses, with the magic number 1999030602 that identifies KLog.
 - Bugfix: The N1MM parser did not build with Qt6.
 
 Mar 2026 - 0.2

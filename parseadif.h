@@ -28,11 +28,20 @@
 
 // Parses the QSOs that KLog sends to KLogServer.
 //
-// KLog sends one QSO per datagram, as a plain ADIF record with all the ADIF
-// fields that have data, so the record is passed along untouched to be saved:
-// the QSO class only models a few fields and rebuilding the record from it
-// would drop all the others.
+// KLog sends one QSO per datagram, as an ADIF record with all the ADIF fields
+// that have data, so the record is passed along untouched to be saved: the QSO
+// class only models a few fields and rebuilding the record from it would drop
+// all the others.
+//
+// The datagram has the same layout that WSJT-X uses:
+//
+//     magic (quint32) | schema (quint32) | type (quint32) | id (QByteArray)
+//
+// followed by the payload of the message, that for an ADIFLogged message is
+// the ADIF record as a QByteArray. Everything is big endian. What tells a KLog
+// datagram from a WSJT-X one is the magic number.
 
+#include <QDataStream>
 #include <QObject>
 #include <QPair>
 #include <QString>
@@ -45,15 +54,24 @@ class ParseADIF : public QObject
 {
     Q_OBJECT
 public:
+    // Identifies a datagram sent by KLog, as 2914831322 identifies a WSJT-X one
+    static constexpr quint32 magicNumber = 1999030602;
+
+    // Messages that KLog sends. The numbers are the ones that WSJT-X uses for
+    // the equivalent messages, as the layout of the datagram is the same one.
+    enum KLogMessageType
+    {
+        ADIFLogged = 12     // A logged QSO, as an ADIF record
+    };
+
     ParseADIF();
     ~ParseADIF();
-
-    // True when the datagram looks like an ADIF record instead of WSJT-X or N1MM data
-    static bool isADIF(const QByteArray &_msg);
 
     void parse(const QByteArray &_msg);
 
 private:
+    void parseADIFRecord(const QString &_data);
+
     // Returns the fields of the first complete record found, or an empty list
     // if there is no <EOR>. _record gets the record just as it was received.
     QList<QPair<QString, QString> > getFields(const QString &_data, QString &_record) const;

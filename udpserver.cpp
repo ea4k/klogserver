@@ -239,9 +239,9 @@ void UDPServer::parse(const QByteArray &msg)
         parseWSJTX->parse(msg);
         return;
     }
-    else if (ParseADIF::isADIF(msg))
+    else if (magic == ParseADIF::magicNumber)
     {
-       //qDebug() << Q_FUNC_INFO << ": ADIF detected! *******************************";
+       //qDebug() << Q_FUNC_INFO << ": - Magic KLog = " << QString::number(magic);
 
         parseADIF->parse(msg);
         return;
