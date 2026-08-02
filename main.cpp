@@ -33,6 +33,9 @@
 void showHelp()
 {
     QTextStream cout(stdout);
+    cout << "KLogServer starts a server listening for ADIF QSOs via UDP. It can receive QSOs\n";
+    cout << "from several hamradio applications like KLog, WSJT-x and N1MM.\n\n";
+    cout << "The main function is to save an ADIF file that can be used as backup.\n\n\n";
     cout << "Usage: klog [OPTION]...\n";
     cout << "Options:\n" ;
     cout << "     -?            Display this help\n" ;
