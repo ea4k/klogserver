@@ -33,6 +33,8 @@ class FileManager
 public:
     FileManager();
     bool saveQSO(QSO *_qso);
+    // Appends an ADIF record that has been received already formatted
+    bool saveADIF(const QString &_adifRecord);
     bool setFileName (const QString &_fn);
 
 private:

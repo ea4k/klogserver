@@ -56,11 +56,13 @@ UDPServer::UDPServer(QObject *parent) :
     realtime = false;
     parseN1MM = new ParseN1MM;
     parseWSJTX = new ParseWSJTX;
+    parseADIF = new ParseADIF;
 
     connect(socketServer,SIGNAL(readyRead()),this,SLOT(slotReadPendingDatagrams()));
 
     connect(parseN1MM,SIGNAL(logged_qso(QSO*)),this,SLOT(slotLoggedQSO(QSO*)));
     connect(parseWSJTX,SIGNAL(logged_qso(QSO*)),this,SLOT(slotLoggedQSO(QSO*)));
+    connect(parseADIF,SIGNAL(logged_adif(QString,QSO*)),this,SLOT(slotLoggedADIF(QString,QSO*)));
 
 }
 
@@ -70,6 +72,7 @@ UDPServer::~UDPServer()
     delete util;
     delete parseN1MM;
     delete parseWSJTX;
+    delete parseADIF;
 }
 
 void UDPServer::slotReadPendingDatagrams()
@@ -245,6 +248,13 @@ void UDPServer::parse(const QByteArray &msg)
         parseWSJTX->parse(msg);
         return;
     }
+    else if (magic == ParseADIF::magicNumber)
+    {
+       //qDebug() << Q_FUNC_INFO << ": - Magic KLog = " << QString::number(magic);
+
+        parseADIF->parse(msg);
+        return;
+    }
     //qDebug() << "UDPServer::parse: TYPE: " << QString::number(type);
 }
 
@@ -350,6 +360,34 @@ void UDPServer::slotLoggedQSO(QSO *_qso)
 
     FileManager fileManager;
     fileManager.saveQSO(_qso);
+    _qso->clear ();
+
+   //qDebug() << Q_FUNC_INFO << " - END";
+}
+
+void UDPServer::slotLoggedADIF(const QString &_adifRecord, QSO *_qso)
+{
+   //qDebug() << Q_FUNC_INFO;
+    if (lastQso->isSame (_qso))
+    {
+       //qDebug() << Q_FUNC_INFO << ": Same QSO, exitting!";
+        return;
+    }
+
+    lastQso->setCall (_qso->getCall ());
+    lastQso->setDateTimeOn (_qso->getDateTimeOn ());
+    lastQso->setBand (_qso->getBand ());
+    lastQso->setMode (_qso->getMode());
+
+    if (!_qso->isValid ())
+    {
+       //qDebug() << Q_FUNC_INFO << ": Not valid QSO, exitting!";
+        return;
+    }
+
+    // The record is saved just as it was received so no ADIF field is lost.
+    FileManager fileManager;
+    fileManager.saveADIF(_adifRecord);
     _qso->clear ();
 
    //qDebug() << Q_FUNC_INFO << " - END";
