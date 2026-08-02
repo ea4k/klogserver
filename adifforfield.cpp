@@ -31,6 +31,11 @@ ADIFForField::ADIFForField()
     util = new Utilities;
 }
 
+ADIFForField::~ADIFForField()
+{
+    delete util;
+}
+
 QString ADIFForField::getADIFForQSODate(const QString &_data, ExportMode _em)
 {
    //qDebug() << Q_FUNC_INFO << ": " << _data;
@@ -274,13 +279,29 @@ QString ADIFForField::getADIFForQSODateOff(const QString &_data, ExportMode _em)
     {
         aux = util->getADIFDateFromQDateTime(tDateTime);
         result = getADIFPair("QSO_DATE_OFF", aux);
+    }
+   //qDebug() << Q_FUNC_INFO << ": " << result;
+    Q_UNUSED(_em);
+    return result;
+}
+
+QString ADIFForField::getADIFForTimeOff(const QString &_data, ExportMode _em)
+{
+   //qDebug() << Q_FUNC_INFO;
+    if (_data.length ()<1)
+        return QString();
+    QString aux, result;
+    result.clear ();
+    QDateTime tDateTime;
+    tDateTime = util->getDateTimeFromSQLiteString(_data);
+    if (tDateTime.isValid())
+    {
         aux = util->getADIFTimeFromQDateTime(tDateTime);
         if (_em == ModeEQSL)
         {
             aux.chop(2);
         }
-       //qDebug() << Q_FUNC_INFO << ": " << result;
-        result = result + getADIFPair("TIME_OFF", aux);
+        result = getADIFPair("TIME_OFF", aux);
     }
    //qDebug() << Q_FUNC_INFO << ": " << result;
     return result;
@@ -324,6 +345,15 @@ QString ADIFForField::getADIFPair(const QString &_field, const QString &_data)
     if (_field.length ()<1)
     {
         return QString();
+    }
+    // A band is never "0": drop BAND/BAND_RX placeholders so no export path can
+    // emit an invalid band. Keeping this rule here means every caller benefits
+    // from it in one single place. (Same rule as KLog's Adif::getADIFField.)
+    const QString fieldN = _field.toUpper();
+    if ((fieldN == QLatin1String("BAND")) || (fieldN == QLatin1String("BAND_RX")))
+    {
+        if (_data.trimmed() == QLatin1String("0"))
+            return QString();
     }
     return QString("<%1:%2>%3 ").arg(_field).arg(length).arg(_data);
 }

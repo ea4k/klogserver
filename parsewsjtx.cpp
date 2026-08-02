@@ -31,7 +31,10 @@ ParseWSJTX::ParseWSJTX()
 
 }
 
-ParseWSJTX::~ParseWSJTX(){}
+ParseWSJTX::~ParseWSJTX()
+{
+    delete qso;
+}
 
 void ParseWSJTX::parse(const QByteArray &msg)
 {
@@ -123,24 +126,29 @@ void ParseWSJTX::parse(const QByteArray &msg)
            //qDebug() << "ParseWSJTX::parse: QSO to be logged: Time_off: " << time_off << QT_ENDL;
                 double frequencyDouble = (double)frequency;
                 frequencyDouble = frequencyDouble/1000000; // Change to MHz
-                int freqInt = (int) frequencyDouble;
                 qso->clear ();
                 qso->setCall (dx_call);
                 qso->setGridSquare (dx_grid);
-                qso->setBand (util.getBandFromFreq (freqInt));
+                // The band is looked up from the frequency in MHz. It used to be
+                // truncated to an integer, which lost every band whose limits are
+                // not a whole number of MHz (60m) and every band above 30 MHz.
+                qso->setBand (util.getBandFromFreq (frequencyDouble));
                 qso->setMode(mode);
                 qso->setFreqTX (frequencyDouble);
                 qso->setRSTRX (report_received);
                 qso->setRSTTX (report_sent);
-                qso->setDate (time_off.date ());
-                qso->setTimeOn (time_on.time ());
+                // The QSO date is the date it started on: taking the date from
+                // time_off moved a QSO to the next day when it spanned 00:00 UTC.
+                qso->setDateTimeOn (time_on);
+                qso->setDateTimeOff (time_off);
                 qso->setMyGridSquare (de_grid);
                 qso->setStationCallsign (de_call);
+                qso->setOperatorCallsign (operatorCall);
                 qso->setComment (comments);
                 qso->setName (name);
                 qso->setSRx_string (exchange_received);
                 qso->setSTx_string (exchange_sent);
-                //qso->setTXPwr (tx_power);
+                qso->setTXPwr (QString(tx_power).toDouble ());
                 emit logged_qso(qso);
                 break;
             }

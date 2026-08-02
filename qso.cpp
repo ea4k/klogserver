@@ -28,10 +28,15 @@
 
 QSO::QSO()
 {
+    // util was left uninitialized, so every util-> call in this class was
+    // dereferencing a wild pointer. KLog's QSO owns its Utilities instance.
+    util = new Utilities;
+    clear();
 }
 
 QSO::~QSO()
 {
+    delete util;
 }
 
 void QSO::clear()
@@ -45,6 +50,7 @@ void QSO::clear()
     stationCallsign = QString();
     operatorCall = QString();
     band = QString();
+    band_rx = QString();
     mode = QString();
 
     qsl_rcvd = QString();
@@ -299,13 +305,27 @@ QString QSO::getADIF()
     ADIFForField adifForField;
 
     adif = adifForField.getADIFForQSODate(util->getDateTimeSQLiteStringFromDateTime (getDateTimeOn ()));
-    adif = adif + adifForField.getADIFForQSODateOff(util->getDateTimeSQLiteStringFromDateTime (getDateTimeOff ()));
+    // Following KLog, the "off" date and time are only exported when they really
+    // differ from the "on" ones, so a normal QSO carries no redundant fields.
+    if (getDateTimeOff ().isValid ())
+    {
+        const QString offString = util->getDateTimeSQLiteStringFromDateTime (getDateTimeOff ());
+        if (getDateTimeOff ().date () != getDateTimeOn ().date ())
+            adif = adif + adifForField.getADIFForQSODateOff(offString);
+        if (getDateTimeOff ().time () != getDateTimeOn ().time ())
+            adif = adif + adifForField.getADIFForTimeOff(offString);
+    }
     adif = adif + adifForField.getADIFForCall(getCall ());
     adif = adif + adifForField.getADIFForRSTSent(getRSTTX ());
     adif = adif + adifForField.getADIFForRSTRcvd(getRSTRX ());
     adif = adif + adifForField.getADIFForBand(getBand ());
+    // BAND_RX is only meaningful for split/cross-band QSOs. Empty and "0" values
+    // are discarded centrally by ADIFForField::getADIFPair().
+    if (QString::compare(getBand (), getBandRX ()) != 0)
+        adif = adif + adifForField.getADIFForBandRX(getBandRX ());
     adif = adif + adifForField.getADIFForMode(getMode ());
-    adif = adif + adifForField.getADIFForSubMode(getSubMode ());
+    if (QString::compare(getMode (), getSubMode ()) != 0)
+        adif = adif + adifForField.getADIFForSubMode(getSubMode ());
     adif = adif + adifForField.getADIFForCQz(QString::number(getCQz ()));
     adif = adif + adifForField.getADIFForITUz(QString::number(getITUz ()));
     adif = adif + adifForField.getADIFForDXCC(QString::number(getDXCC ()));
@@ -334,7 +354,9 @@ QString QSO::getADIF()
 
     adif = adif + adifForField.getADIFForComment(getComment ());
     adif = adif + adifForField.getADIFForFreq(QString::number(getFreqTX ()));
-    adif = adif + adifForField.getADIFForFreq_rx (QString::number(getFreqRX ()));
+    // As with BAND_RX, FREQ_RX only makes sense when it differs from FREQ.
+    if (!util->isSameFreq(getFreqTX (), getFreqRX ()))
+        adif = adif + adifForField.getADIFForFreq_rx (QString::number(getFreqRX ()));
     adif = adif + adifForField.getADIFForStationCallsign(getStationCallsign ());
 
  /*
@@ -345,8 +367,6 @@ QString QSO::getADIF()
     adif = adif + adifForField.getADIFForAnt_el(const QString &_data);
     adif = adif + adifForField.getADIFForAnt_path(const QString &_data);
     adif = adif + adifForField.getADIFForARRL_sect(const QString &_data);
-
-    adif = adif + adifForField.getADIFForBandRX(const QString &_data);
 
     adif = adif + adifForField.getADIFForQSLRDate(const QString &_data);
     adif = adif + adifForField.getADIFForQSLSDate(const QString &_data);
@@ -439,6 +459,10 @@ bool QSO::setBand(const QString &_c)
     if (_c.length()>0)
     {
         band = _c;
+        // As KLog does, a QSO that has no RX band defaults to the TX one, so a
+        // non-split QSO never reports a different band for reception.
+        if (band_rx.isNull())
+            band_rx = band;
         return true;
     }
     else
@@ -458,19 +482,19 @@ bool QSO::setBandRX(const QString &_c)
   //qDebug() << "QSO::setBandRX: "<< _c << QT_ENDL;
     if (_c.length()>0)
     {
-        band = _c;
+        band_rx = _c;
         return true;
     }
     else
     {
-        band = QString();
+        band_rx = QString();
         return false;
     }
 }
 
 QString QSO::getBandRX()
 {
-    return band;
+    return band_rx;
 }
 
 bool QSO::setMode(const QString &_c)

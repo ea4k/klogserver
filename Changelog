@@ -1,3 +1,31 @@
+TBD - 0.3
+- Bugfix: Complete the Qt6 migration. The N1MM parser compared the QXmlStreamReader
+  name(), a QStringView in Qt6, against string literals, so the program did not build.
+- Bugfix: QSO never initialised its Utilities pointer, so every call made through it
+  was undefined behaviour. QSO now owns and releases that object, as KLog does.
+- Bugfix: The band of a QSO coming from WSJT-X was looked up from the frequency
+  truncated to a whole number of MHz, against a table with only nine HF bands. QSOs on
+  60m, 6m, 4m, 2m, 70cm and above were stored with no BAND at all. The lookup now uses
+  the frequency ranges of KLog's band table.
+- Bugfix: A QSO logged from WSJT-X across 00:00 UTC was dated on the day it ended,
+  because the date was taken from the QSO end time. The start time is used now.
+- Bugfix: QSO::setBandRX() wrote to (and QSO::getBandRX() read) the TX band, so setting
+  the RX band silently overwrote BAND. The QSO now keeps a separate RX band.
+- Bugfix: Locator::getLocator() negated the longitude, returning mirrored locators.
+- Enhancement: Callsign validation now uses KLog's Callsign class, replacing the
+  hand-written prefix table. Validation was also unreachable: it was gated on an
+  uninitialised global that was always false, so every callsign was accepted.
+- Enhancement: Locators are accepted in any case and the latitude/longitude returned
+  is the centre of the square, so a locator survives a coordinate round trip.
+- Enhancement: The QSO end date/time, BAND_RX, SUBMODE and FREQ_RX are only exported
+  when they differ from their QSO start / TX counterparts, as KLog does.
+- Enhancement: TIME_OFF, OPERATOR and TX_PWR sent by WSJT-X are no longer discarded.
+- Maintenance: A BAND or BAND_RX of "0" is dropped in one single place, so no export
+  path can emit an invalid band (same rule as KLog's Adif::getADIFField()).
+- Maintenance: Fix leaks of the Utilities and QSO objects held by ADIFForField,
+  UDPServer, ParseWSJTX and ParseN1MM.
+- Maintenance: Build as C++17, which is what Qt6 requires.
+
 Mar 2026 - 0.2
 - Migrated to Qt6
 

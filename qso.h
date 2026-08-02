@@ -243,7 +243,7 @@ private:
     int srx, stx, points;
 
 
-    QString satName, satMode, callsign, stationCallsign, operatorCall, propMode, band, mode, submode, gridsquare, myGridsquare, qth, name, RST_tx, RST_rx;
+    QString satName, satMode, callsign, stationCallsign, operatorCall, propMode, band, band_rx, mode, submode, gridsquare, myGridsquare, qth, name, RST_tx, RST_rx;
     int qsoId, logId, dxcc;
     int cqz, myCQz, ituz, myITUz;
     QString qsl_rcvd, qsl_sent, qslSenVia, qslRecVia, qslVia, qslMsg;

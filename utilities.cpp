@@ -24,9 +24,8 @@
  *                                                                           *
  *****************************************************************************/
 #include "utilities.h"
-#include "global.h"
+#include "callsign.h"
 
-bool g_callsignCheck;
 Utilities::Utilities()
 {
    //qDebug() << "Utilities::Utilities"  ;
@@ -566,57 +565,6 @@ bool Utilities::isValidDateTime(const QString &_d)
     return false;
 }
 
-bool Utilities::isValidSubCall(const QString &_c)
-{
-   //qDebug() << "Utilities::isValidSubCall: " << _c ;
-    // This functions only checks simple calls like EA4K, not composed like EA4K/F of F/EA4K/QRP
-    //Rules: http://life.itu.int/radioclub/rr/art19.pdf
-    if (_c.contains ('/'))
-    {
-        return false;
-    }
-    if (_c.length()<3)
-    {
-       //qDebug() << "Utilities::isValidSubCall: FALSE-1: " << _c ;
-        return false;
-    }
-    if (!(_c.at(_c.length ()-1).isLetter ()))
-    {
-       //qDebug() << "Utilities::isValidSubCall: FALSE-1.1: " << _c ;
-        return false;
-    }
-    for (int i = 0; i<_c.length ();i++)
-    {
-        if (!_c.at(i).isLetterOrNumber ())
-        {
-            // Non valid chars
-            return false;
-        }
-    }
-
-    int prefixLength = isAPrefix (_c);
-    if (prefixLength<1)
-    {
-       //qDebug() << "Utilities::isValidSubCall: FALSE-1.2: " << _c ;
-        return false;
-    }
-
-    int i = prefixLength;
-   //qDebug() << "Utilities::isValidSubCall: prefixLength" << QString::number(prefixLength) ;
-   //qDebug() << "Utilities::isValidSubCall: call" << _c ;
-    while(i<_c.length ()-1)
-    {
-        if (!((_c.at(i).isLetter()) ))
-        {
-           //qDebug() << "Utilities::isValidSubCall: FALSE-1.3: " << _c ;
-            return false;
-        }
-        i++;
-    }
-   //qDebug() << "Utilities::isValidSubCall: true" ;
-    return true;
-}
-
 bool Utilities::isValidCQ(const int _cq)
 {
     if ((_cq>0) && (_cq<(CQZones+1)))
@@ -644,232 +592,6 @@ bool Utilities::isValidAge(const int _age)
     return false;
 }
 
-int Utilities::isAPrefix (const QString &_c)
-{
-    // Returns -1 if it is not a prefix or valid call.
-    // Returns an int with the lenght of the prefix:
-    // The length would be including the number, if possible EA4 or;
-    // including just the country prefix: EA if the number is not included.
-
-   //qDebug() << "Utilities::isAPrefix: " << _c ;
-    // Prefixes are at least 1 chars (like in K1K)
-    int length = _c.length ();
-
-    if (length < 1)
-    {
-       //qDebug() << "Utilities::isAPrefix: TOO short prefix - false - END \n";
-        return -1;
-    }
-
-    QString call = _c;
-   //qDebug() << "Utilities::isAPrefix: -10: " << call.at(0) ;
-    QChar firstChar = call.at(0);
-    QList<QChar> validFirstLettersOnly = {'B', 'F', 'G', 'I', 'K', 'M', 'N', 'R', 'W'};
-
-    if (length == 1)
-    {
-        if (validFirstLettersOnly.contains (firstChar))
-        {
-           //qDebug() << "Utilities::isAPrefix: VALID 1 letter" ;
-            return 1;
-        }
-        else
-        {
-           //qDebug() << "Utilities::isAPrefix: NOT VALID 1 letter" ;
-            return -1;
-        }
-    }
-
-    QChar secondChar = call.at(1);
-   //qDebug() << "Utilities::isAPrefix: SecondChar: " << secondChar ;
-    int pref = -1;
-    if (call.count(QRegularExpression("\\d")) >0) // Does it has any digit?
-    {
-       //qDebug() << "Utilities::isAPrefix: It has digits: " << call ;
-        bool done = false;
-        int i = -1;
-        while ((i < length-1) && !done)
-        {
-           //qDebug() << "Utilities::isAPrefix: in the while: " << QString::number(i) ;
-            i++;
-            if (call.at(i).isLetter ())
-            {
-               //qDebug() << "Utilities::isAPrefix: in the while: is a Letter: " << call.at(i) ;
-                if (pref>0)
-                {
-                    pref = i;
-                    done = true;
-                }
-            }
-            else
-            {
-               //qDebug() << "Utilities::isAPrefix: in the while: is NOT a Letter: " << call.at(i) ;
-                if (i > 0)
-                {
-                    pref = i;
-                }
-            }
-        } // end of while
-    }
-
-   //qDebug() << "Utilities::isAPrefix: After the while: " << QString::number(pref) ;
-
-    QString prefix;
-    if (pref>0)
-    {
-        //qDebug() << "Utilities::isAPrefix: pref>0 =>: " << call.left (pref) ;
-        prefix = call.left (pref);
-    }
-    else
-    {
-        prefix = call;
-       //qDebug() << "Utilities::isAPrefix: pref<=0 =>: " << call ;
-    }
-
-    length = prefix.length();
-
-    QChar thirdChar = QChar();
-    if (length>2)
-    {
-        thirdChar = prefix.at(2);
-    }
-
-   //qDebug() << "Utilities::isAPrefix: -50 "  ;
-    // The first two characters shall be two letters or a letter followed
-    // by a digit or a digit followed by a letter. The first two characters or in certain cases
-    // the first character of a call sign constitute the nationality identification
-
-    if (firstChar.isDigit() && secondChar.isDigit())
-    {
-       //qDebug() << "Utilities::isAPrefix: FALSE-6: " << prefix ;
-        return -1;
-    }
-
-   //qDebug() << "Utilities::isAPrefix: -60 "  ;
-    if (firstChar.isLetter() && secondChar.isLetter() && thirdChar.isLetter())
-    {
-       //qDebug() << "Utilities::isAPrefix: FALSE-6: " << prefix ;
-        return -1;
-    }
-
-   //qDebug() << "Utilities::isAPrefix: -70 "  ;
-
-    QList<QChar> validFirstLetters = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'P', 'R', 'S', 'T' ,'U', 'V', 'W', 'Z'};
-
-    if (secondChar.isDigit ())
-    {
-        if (!validFirstLetters.contains (firstChar))
-        {
-           //qDebug() << "Utilities::isAPrefix: NOT VALID 1 letter not valid" ;
-            return -1;
-        }
-    }
-    /*
-     // The following if is to manage not format but specific IARU callsign assignments
-     // defined here: http://life.itu.int/radioclub/rr/ap42.pdf
-     // For the time being, KLog will not check that
-    if ( (firstChar.isLetter ()) && (secondChar.isDigit ()) && (validFirstLetters.contains(firstChar)))
-    {
-       //qDebug() << "Utilities::isAPrefix validFirstLetters contains the first one!" ;
-        if (firstChar == 'C')
-        {
-            if ((secondChar == '1') || (secondChar == '7'))
-            {
-               //qDebug() << "Utilities::isAPrefix: FALSE-7.1: " << prefix ;
-                return false;
-            }
-        }
-        if (firstChar == 'D')
-        {
-            //((secondChar == '1') || (secondChar == '8'))
-            if (false)
-            {
-               //qDebug() << "Utilities::isAPrefix: FALSE-7.2: " << prefix ;
-                return false;
-            }
-        }
-        if (firstChar == 'E')
-        {
-            if (!(secondChar == '2') && !(secondChar == '3') && !(secondChar == '4') && !(secondChar == '7')
-            {
-               //qDebug() << "Utilities::isAPrefix: FALSE-7.3: " << prefix ;
-                return false;
-            }
-        }
-        if (firstChar == 'H')
-        {
-            if ((secondChar == '1') )
-            {
-               //qDebug() << "Utilities::isAPrefix: FALSE-7.4: " << prefix ;
-                return false;
-            }
-        }
-        if (firstChar == 'J')
-        {
-            if ((secondChar == '1') || (secondChar == '9'))
-            {
-               //qDebug() << "Utilities::isAPrefix: FALSE-7.5: " << prefix ;
-                return false;
-            }
-        }
-        if (firstChar == 'P')
-        {
-            if (secondChar == '1')
-            {
-               //qDebug() << "Utilities::isAPrefix: FALSE-7.6: " << prefix ;
-                return false;
-            }
-        }
-        if (firstChar == 'S')
-        {
-            if ((secondChar == '1') || (secondChar == '6'))
-            {
-               //qDebug() << "Utilities::isAPrefix: FALSE-7.7: " << prefix ;
-                return false;
-            }
-        }
-        if (firstChar == 'T')
-        {
-            if (secondChar == '0')
-            {
-               //qDebug() << "Utilities::isAPrefix: FALSE-7.8: " << prefix ;
-                return false;
-            }
-        }
-        if (firstChar == 'V')
-        {
-            if ((secondChar == '1') || (secondChar == '9'))
-            {
-               //qDebug() << "Utilities::isAPrefix: FALSE-7.9: " << prefix ;
-                return false;
-            }
-        }
-        if (firstChar == 'Z')
-        {
-            if (!((secondChar == '2') || (secondChar == '3')))
-            {
-               //qDebug() << "Utilities::isAPrefix: FALSE-7.10: " << prefix ;
-                return false;
-            }
-        }
-       //qDebug() << "Utilities::isAPrefix: 1-Letter + number prefix valid: " << prefix ;
-    }
-    */
-   //qDebug() << "Utilities::isAPrefix: After the if's"  ;
-    // It seems to be a valid prefix, let's count how many chars belong to the prefix, first letter after the digit
-    // should be the suffix starting point
-
-   //qDebug() << "Utilities::isAPrefix: Prefix length: " << QString::number(pref) << "/" << prefix ;
-    if (pref>0)
-    {
-        return pref;
-    }
-    else
-    {
-        return prefix.length ();
-    }
-}
-
 void Utilities::setCallValidation(const bool _b)
 {
     callValidation = _b;
@@ -877,222 +599,26 @@ void Utilities::setCallValidation(const bool _b)
 
 bool Utilities::isValidCall(const QString &_c)
 {
-    //qDebug() << "Utilities::isValidCall: " << _c ;
-    // Prefixes are at least 2 chars
-    if (!g_callsignCheck)
-    {
-        //qDebug() << "Utilities::isValidCall - 009" ;
+    //qDebug() << Q_FUNC_INFO << ": " << _c;
+    if (!callValidation)
         return true;
-    }
-    //qDebug() << "Utilities::isValidCall - 010" ;
-    QString call = _c;
-    if (_c.length()<3)
-    {
-        //qDebug() << "Utilities::isValidCall: FALSE-1: " << _c ;
-        return false;
-    }
-    //qDebug() << "Utilities::isValidCall - 015" ;
-    call.replace('\\', '/');
 
-    if (call.count('/')>2)
-    {
-       //qDebug() << "Utilities::isValidCall: FALSE-3: " << call;
-        return false;
-    }
-    //qDebug() << "Utilities::isValidCall - 020" ;
-    if (call.count('/') == 2)
-    { //Things like F/EA4K/P will become F/EA4K
-       //qDebug() << "Utilities::isValidCall: Two /; Ignoring the last part: " << call ;
-        QStringList parts;
-        parts.clear();
-        parts << call.split('/');
-        call = parts.at(0) + "/" + parts.at(1);
-    }
-    //qDebug() << "Utilities::isValidCall - 025" ;
-   //qDebug() << "Utilities::isValidCall: Call: " << call ;
-
-    if (call.count('/') == 1)
-    { // Complex calls (like F/EA4K or EA4K/F OR /p OR /qrp
-      // We are just checking the call format not if it belongs to a country or whatever.
-      // It may return true for wrong calls like "ABC/EA4K"
-      // TODO: Add a check just for prefixes to fix the previous
-        //qDebug() << "Utilities::isValidCall: Call with one /: " << call ;
-        QStringList parts;
-        parts.clear();
-        parts << call.split ('/');
-
-        //return ( ((isAPrefix (parts.at (0)))>0) || ((isAPrefix (parts.at (1)))>0) || (isValidSubCall (parts.at(0)) ) || (isValidSubCall (parts.at(1)) ));
-
-
-        if (parts.at(0).length ()<parts.at(1).length ())
-        {
-            return ( ((isAPrefix (parts.at (0)))>0) && (isValidSubCall (parts.at(1)) ) );
-        }
-        else
-        { //Both lenght are just the same or the second is showter, we need to check both parts and return true if one is valid
-          // It may happen that we have a EA4K/QRP or EA4K/F or EA4K/TTT
-            return isValidSubCall (parts.at(0));
-        }
-    }
-    return isValidSubCall (call);
+    Callsign _callsign(_c);
+    return _callsign.isValid();
 }
 
-QString Utilities::getPrefixFromCall(const QString &_c)
+QString Utilities::getPrefixFromCall(const QString &_c, bool withAreaNumber)
 {
-   //qDebug() << Q_FUNC_INFO << ": " << _c ;
-    QString call = _c;
-    call.replace('\\', '/');
+    //qDebug() << Q_FUNC_INFO << ": " << _c;
+    Callsign _callsign(_c);
+    if (!_callsign.isValid() && !_callsign.isValidPrefix())
+        return QString();
 
-    if (call.count('/') == 2)
-    { //Things like F/EA4K/P will become F/EA4K
-        QStringList parts;
-        parts.clear();
-        parts << call.split('/');
-        call = parts.at(0) + "/" + parts.at(1);
-    }
-
-    //QString prefix = QString();
-    int pref = -1;
-    if (call.count('/') == 1)
-    { // Complex calls (like F/EA4K or EA4K/F OR /p OR /qrp
-        QStringList parts;
-        parts.clear();
-        parts << call.split ('/');
-        if (parts.at(0).length ()<parts.at(1).length ())
-        { // First one is shorter
-           //qDebug() << Q_FUNC_INFO << ": First one is shorter: " ;
-            int pref = isAPrefix (parts.at(0));
-            if (pref>0)
-            {
-               //qDebug() << Q_FUNC_INFO << ": R1=" << call.left (pref) ;
-                return parts.at(0);
-            }
-            else
-            {
-               //qDebug() << Q_FUNC_INFO << ": EMPTY-2"  ;
-                return QString();
-            }
-        }
-        else if(parts.at(0).length ()>parts.at(1).length ())
-        { // Second one is shorter
-           //qDebug() << Q_FUNC_INFO << ": Second one is shorter: " ;
-            pref = isAPrefix (parts.at(1));
-            if (pref>0)
-            {
-               //qDebug() << Q_FUNC_INFO << ": R2=" << parts.at(1) ;
-                return parts.at(1);
-            }
-            else
-            {
-                pref = isAPrefix (parts.at(0));
-                if (pref>0)
-                {
-                   //qDebug() << Q_FUNC_INFO << ": R3=" << parts.at(0).left(pref) ;
-                    return parts.at(0).left (pref);
-                }
-                else
-                {
-                   //qDebug() << Q_FUNC_INFO << ": EMPTY-3"  ;
-                    return QString();
-                }
-            }
-        }
-        else
-        { //Both lenght are just the same, we need to check both parts and return true if one is valid
-           //qDebug() << Q_FUNC_INFO << ": Same length, we shoudl consider the first one if valid, if not the second one " ;
-        }
-    }
-    pref = isAPrefix (call);
-    if (pref>0)
-    {
-       //qDebug() << Q_FUNC_INFO << ": R4=" << call.left (pref) ;
-        return call.left (pref);
-    }
-   //qDebug() << Q_FUNC_INFO << ": EMPTY-4"  ;
-    return QString();
+    if (withAreaNumber)
+        return _callsign.getHostFullPrefix();
+    return _callsign.getHostPrefix();
 }
 
-/*
-QPair<QString, QString> Utilities::getCallParts(const QString &_c)
-{ // DXCC prefix, if different from original, full call
-
-    QString call = _c;
-    QPair<QString, QString> pair;
-    pair.first = QString();
-    pair.second = QString();
-
-    if (_c.length()<3)
-    {
-       //qDebug() << "Utilities::isValidCall: FALSE-1: " << _c ;
-        return pair;
-    }
-
-    call.replace('\\', '/');
-
-    if (call.count('/')>2)
-    {
-       //qDebug() << "Utilities::isValidCall: FALSE-3: " << call ;
-        return pair;
-    }
-    if (call.count('/') == 2)
-    { //Things like F/EA4K/P will become F/EA4K
-        QStringList parts;
-        parts.clear();
-        parts << call.split('/');
-        call = parts.at(0)+parts.at(1);
-    }
-    QString prefix = QString();
-
-    if (call.count('/') == 1)
-    { // Complex calls (like F/EA4K or EA4K/F OR /p OR /qrp
-        QStringList parts;
-        parts.clear();
-        parts << call.split('/');
-       //qDebug() << "Utilities::isValidCall: first: " << parts.at(0) ;
-       //qDebug() << "Utilities::isValidCall: second: " << parts.at(1) ;
-
-        QStringList validSuffixes = {"P", "M", "MM", "QRP", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"};
-        if (validSuffixes.contains (parts.at(1)))
-        {
-           //qDebug() << "Utilities::isValidCall: returning a result just with: " << parts.at(1) ;
-            pair.second = parts.at(1);
-            return pair;
-        }
-
-        if (parts.at(0).length ()<=parts.at(1).length ())
-        {
-            if (isAPrefix (parts.at(0))>0)
-            //if (isAPrefix (parts.at(0)))
-            {
-               //qDebug() << "Utilities::isValidCall: first is shorter " ;
-                pair.first = parts.at(0);
-                pair.second = parts.at(1);
-            }
-            else
-            {
-               //qDebug() << "Utilities::isValidCall: first is shorter but not a prefix" ;
-                return pair;
-            }
-        }
-        else
-        {
-            //qDebug() << "Utilities::isValidCall: second is shorter " ;
-             if (isAPrefix (parts.at(1))>0)
-             {
-
-                 pair.first = parts.at(1);
-                 pair.second = parts.at(0);
-             }
-             else
-             {
-                //qDebug() << "Utilities::isValidCall: second is shorter but not a prefix" ;
-                 return pair;
-             }
-        }
-    }
-    return pair;
-}
-*/
 
 bool Utilities::isSameFreq(const double fr1, const double fr2)
 {
@@ -1976,46 +1502,63 @@ QString Utilities::getLogColumnName(const QString &_column)
     }
 }
 
-QString Utilities::getBandFromFreq(const int _f)
-{// Freq in MHz
-    switch (_f)
+QString Utilities::getBandFromFreq(const double _f)
+{// Freq in MHz.
+ // The band limits are the ones KLog uses in its band table, so both programs
+ // agree on the band a frequency belongs to. The previous implementation
+ // switched over the frequency truncated to an integer number of MHz, which
+ // only recognised nine HF bands and silently dropped 60m, 6m, 4m, 2m, 70cm...
+    struct BandLimits
     {
-        case 28:
+        const char *name;
+        double lower;   // MHz, included
+        double upper;   // MHz, included
+    };
+
+    static const BandLimits bands[] = {
+        {"2190M",      0.1357,     0.1378},
+        {"630M",       0.472,      0.479},
+        {"560M",       0.501,      0.504},
+        {"160M",       1.8,        2.0},
+        {"80M",        3.5,        4.0},
+        {"60M",        5.102,      5.404},
+        {"40M",        7.0,        7.3},
+        {"30M",       10.0,       10.15},
+        {"20M",       14.0,       14.35},
+        {"17M",       18.068,     18.168},
+        {"15M",       21.0,       21.45},
+        {"12M",       24.89,      24.99},
+        {"10M",       28.0,       29.7},
+        {"8M",        40.0,       45.0},
+        {"6M",        50.0,       54.0},
+        {"5M",        54.000001,  69.9},
+        {"4M",        70.0,       71.0},
+        {"2M",       144.0,      148.0},
+        {"1.25M",    222.0,      225.0},
+        {"70CM",     420.0,      450.0},
+        {"33CM",     902.0,      928.0},
+        {"23CM",    1240.0,     1300.0},
+        {"13CM",    2340.0,     2450.0},
+        {"9CM",     3300.0,     3500.0},
+        {"6CM",     5650.0,     5925.0},
+        {"3CM",    10000.0,    10500.0},
+        {"1.25CM", 24000.0,    24250.0},
+        {"6MM",    47000.0,    47200.0},
+        {"4MM",    75500.0,    81000.0},
+        {"2.5MM", 119980.0,   120020.0},
+        {"2MM",   142000.0,   149000.0},
+        {"1MM",   241000.0,   250000.0},
+        {"SUBMM", 300000.0,  7500000.0}
+    };
+
+    for (const BandLimits &band : bands)
+    {
+        if ((_f >= band.lower) && (_f <= band.upper))
         {
-            return "10m";
-        }
-        case 24:
-        {
-            return "12m";
-        }
-        case 21:
-        {
-            return "15m";
-        }
-        case 18:
-        {
-            return "17m";
-        }
-        case 14:
-        {
-            return "20m";
-        }
-        case 10:
-        {
-            return "30m";
-        }
-        case 7:
-        {
-            return "40m";
-        }
-        case 3:
-        {
-            return "80m";
-        }
-        case 1:
-        {
-            return "160m";
+            //qDebug() << Q_FUNC_INFO << ": " << QString::number(_f) << " = " << band.name;
+            return QString(band.name);
         }
     }
+    //qDebug() << Q_FUNC_INFO << ": No band for " << QString::number(_f);
     return QString();
 }

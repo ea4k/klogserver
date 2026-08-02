@@ -30,7 +30,10 @@ ParseN1MM::ParseN1MM()
     qso = new QSO();
 }
 
-ParseN1MM::~ParseN1MM(){}
+ParseN1MM::~ParseN1MM()
+{
+    delete qso;
+}
 
 void ParseN1MM::parse(const QByteArray &msg)
 {
@@ -40,7 +43,7 @@ void ParseN1MM::parse(const QByteArray &msg)
         //qDebug() << Q_FUNC_INFO << ": In the while";
          xml.readNext();
         //qDebug() << Q_FUNC_INFO << ": xml.name: " << xml.name();
-         if (xml.name() == "contactinfo")
+         if (xml.name() == QLatin1String("contactinfo"))
          {
             parseXMLContact (xml); ;
             return;
@@ -60,7 +63,7 @@ void ParseN1MM::parseXMLContact(QXmlStreamReader &_xml)
     while (!_xml.atEnd()) {
        //qDebug() << Q_FUNC_INFO << ": In the while";
         _xml.readNext();
-        if (_xml.name () == "app")
+        if (_xml.name () == QLatin1String("app"))
         {
             if (_xml.readElementText () != "N1MM")
             {
@@ -68,17 +71,17 @@ void ParseN1MM::parseXMLContact(QXmlStreamReader &_xml)
                 return;
             }
         }
-        else if (_xml.name () == "")
+        else if (_xml.name () == QLatin1String(""))
         {}
-        else if (_xml.name () == "contestname")
+        else if (_xml.name () == QLatin1String("contestname"))
         {
             qso->setContestId("CQ-WW-SSB");
         }
-        else if (_xml.name () == "contestnr")
+        else if (_xml.name () == QLatin1String("contestnr"))
         {
             //(_xml.readElementText ())
         }
-        else if (_xml.name () == "timestamp")
+        else if (_xml.name () == QLatin1String("timestamp"))
         {   // TODO: import date / time
             // YYYY-MM-DD hh:mm:ss
             QString aux = _xml.readElementText ();
@@ -95,29 +98,29 @@ void ParseN1MM::parseXMLContact(QXmlStreamReader &_xml)
                //qDebug() << Q_FUNC_INFO << " - QDatetime not valid";
             }
         }
-        else if (_xml.name () == "mycall")
+        else if (_xml.name () == QLatin1String("mycall"))
         {
             qso->setStationCallsign (_xml.readElementText ());
         }
-        else if (_xml.name () == "band")
+        else if (_xml.name () == QLatin1String("band"))
         {   //TODO:  14, 28,...
             QString aux = _xml.readElementText ();
             int freqInt = aux.toInt ();
             qso->setBand (util.getBandFromFreq (freqInt));
         }
-        else if (_xml.name () == "rxfreq")
+        else if (_xml.name () == QLatin1String("rxfreq"))
         {
             qso->setFreqRX ((_xml.readElementText ().toDouble ())/100000);
         }
-        else if (_xml.name () == "txfreq")
+        else if (_xml.name () == QLatin1String("txfreq"))
         {
             qso->setFreqTX ((_xml.readElementText ().toDouble ())/100000);
         }
-        else if (_xml.name () == "operator")
+        else if (_xml.name () == QLatin1String("operator"))
         {
             qso->setOperatorCallsign (_xml.readElementText ());
         }
-        else if (_xml.name () == "mode")
+        else if (_xml.name () == QLatin1String("mode"))
         {
             QString aux = _xml.readElementText ();
             if ( aux == "USB" )
@@ -135,149 +138,149 @@ void ParseN1MM::parseXMLContact(QXmlStreamReader &_xml)
                 qso->setMode (aux);
             }
         }
-        else if (_xml.name () == "call")
+        else if (_xml.name () == QLatin1String("call"))
         {
             qso->setCall (_xml.readElementText ());
         }
-        else if (_xml.name () == "countryprefix")
+        else if (_xml.name () == QLatin1String("countryprefix"))
         {
             qso->setPfx (_xml.readElementText ());
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "wpxprefix")
+        else if (_xml.name () == QLatin1String("wpxprefix"))
         {
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "stationprefix")
+        else if (_xml.name () == QLatin1String("stationprefix"))
         {
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "continent")
+        else if (_xml.name () == QLatin1String("continent"))
         {
             qso->setCont (_xml.readElementText ());
         }
-        else if (_xml.name () == "snt")
+        else if (_xml.name () == QLatin1String("snt"))
         {
             qso->setRSTTX (_xml.readElementText ());
         }
-        else if (_xml.name () == "sntnr")
+        else if (_xml.name () == QLatin1String("sntnr"))
         {
             qso->setSTx ((_xml.readElementText ()).toInt ());
         }
-        else if (_xml.name () == "rcv")
+        else if (_xml.name () == QLatin1String("rcv"))
         {
             qso->setRSTRX (_xml.readElementText ());
         }
-        else if (_xml.name () == "rcvnr")
+        else if (_xml.name () == QLatin1String("rcvnr"))
         {
            //qso->setSRx ((_xml.readElementText ()).toInt ());
         }
-        else if (_xml.name () == "gridsquare")
+        else if (_xml.name () == QLatin1String("gridsquare"))
         {
             qso->setGridSquare (_xml.readElementText ());
         }
-        else if (_xml.name () == "exchange1")
+        else if (_xml.name () == QLatin1String("exchange1"))
         {
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "section")
+        else if (_xml.name () == QLatin1String("section"))
         {
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "comment")
+        else if (_xml.name () == QLatin1String("comment"))
         {
             qso->setComment (_xml.readElementText ());
         }
-        else if (_xml.name () == "qth")
+        else if (_xml.name () == QLatin1String("qth"))
         {
             qso->setQTH (_xml.readElementText ());
         }
-        else if (_xml.name () == "name")
+        else if (_xml.name () == QLatin1String("name"))
         {
             qso->setName (_xml.readElementText ());
         }
-        else if (_xml.name () == "power")
+        else if (_xml.name () == QLatin1String("power"))
         {
             qso->setTXPwr ((_xml.readElementText ()).toDouble ());
         }
-        else if (_xml.name () == "misctext")
+        else if (_xml.name () == QLatin1String("misctext"))
         {
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "zone")
+        else if (_xml.name () == QLatin1String("zone"))
         {
             qso->setCQz ((_xml.readElementText ()).toInt ());
             qso->setSRx ((_xml.readElementText ()).toInt ());
         }
-        else if (_xml.name () == "prec")
+        else if (_xml.name () == QLatin1String("prec"))
         {
             qso->setPrecedence (_xml.readElementText ());
         }
-        else if (_xml.name () == "ck")
+        else if (_xml.name () == QLatin1String("ck"))
         {
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "ismultiplier1")
+        else if (_xml.name () == QLatin1String("ismultiplier1"))
         {
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "ismultiplier2")
+        else if (_xml.name () == QLatin1String("ismultiplier2"))
         {
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "ismultiplier3")
+        else if (_xml.name () == QLatin1String("ismultiplier3"))
         {
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "points")
+        else if (_xml.name () == QLatin1String("points"))
         {
             qso->setPoints((_xml.readElementText ()).toInt ());
 
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "radionr")
+        else if (_xml.name () == QLatin1String("radionr"))
         {
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "run1run2")
+        else if (_xml.name () == QLatin1String("run1run2"))
         {
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "RoverLocation")
+        else if (_xml.name () == QLatin1String("RoverLocation"))
         {
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "RadioInterfaced")
+        else if (_xml.name () == QLatin1String("RadioInterfaced"))
         {
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "NetworkedCompNr")
+        else if (_xml.name () == QLatin1String("NetworkedCompNr"))
         {
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "IsOriginal")
+        else if (_xml.name () == QLatin1String("IsOriginal"))
         {
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "NetBiosName")
+        else if (_xml.name () == QLatin1String("NetBiosName"))
         {
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "ID")
+        else if (_xml.name () == QLatin1String("ID"))
         {
             //qso-> (_xml.readElementText ());
-        }else if (_xml.name () == "IsRunQSO")
+        }else if (_xml.name () == QLatin1String("IsRunQSO"))
         {
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "StationName")
+        else if (_xml.name () == QLatin1String("StationName"))
         { //Not ADIF
             //qso-> (_xml.readElementText ());
         }
-        else if (_xml.name () == "IsClaimedQso")
+        else if (_xml.name () == QLatin1String("IsClaimedQso"))
         {
             //qso-> (_xml.readElementText ());
-        }else if (_xml.name () == "contactinfo")
+        }else if (_xml.name () == QLatin1String("contactinfo"))
         {
             //qso-> (_xml.readElementText ());
         }

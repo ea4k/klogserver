@@ -31,7 +31,7 @@ QT += core \
 VERSION = 0.0.2
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 
-CONFIG += c++11 console
+CONFIG += c++17 console
 CONFIG -= app_bundle
 
 # You can make your code fail to compile if it uses deprecated APIs.
@@ -40,6 +40,7 @@ CONFIG -= app_bundle
 
 SOURCES += \
         adifforfield.cpp \
+        callsign.cpp \
         filemanager.cpp \
         locator.cpp \
         main.cpp \
@@ -63,8 +64,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     adifforfield.h \
+    callsign.h \
     filemanager.h \
-    global.h \
     klogdefinitions.h \
     locator.h \
     mainclass.h \

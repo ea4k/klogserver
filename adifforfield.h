@@ -39,6 +39,7 @@ class ADIFForField: public QObject {
     //      but may slow down the process as queries will be executed.
 public:
     ADIFForField();
+    ~ADIFForField();
 
     QString getADIFForQSODate(const QString &_data, ExportMode _em = ModeADIF);
     //QString getADIFForTime(const QString &_data, ExportMode _em = ModeADIF);
@@ -63,6 +64,7 @@ public:
     QString getADIFForGridSquare(const QString &_data);
     QString getADIFForMyGridSquare(const QString &_data);
     QString getADIFForQSODateOff(const QString &_data, ExportMode _em = ModeADIF);
+    QString getADIFForTimeOff(const QString &_data, ExportMode _em = ModeADIF);
     QString getADIFForFreq(const QString &_data);
     QString getADIFForStationCallsign(const QString &_data);
 

@@ -112,7 +112,7 @@ public:
     bool isValidDateTimeFromString(const QString &_s);
     bool isValidDXCC(const int _d);
     QStringList getValidADIFFieldAndData(const QString &_b);
-    QString getPrefixFromCall(const QString &_c);
+    QString getPrefixFromCall(const QString &_c, bool withAreaNumber = false);
     //QString getPrefixFromFullCall(const QString &_c);
 
     // Write DATE/TIME to DB
@@ -147,16 +147,12 @@ public:
     bool isValidCQ(const int _cq);
     bool isValidITU(const int _itu);
     bool isValidAge(const int _age);
-    QString getBandFromFreq(const int _f); // Freq in MHz
+    QString getBandFromFreq(const double _f); // Freq in MHz
     //QPalette getPalete(bool _ok);
 private:
     void init();
     bool processConfigLine(const QString &_line);
     QString getKLogDefaultDatabaseFile();
-    int isAPrefix(const QString &_c);
-    bool isValidSubCall(const QString &_c);
-
-    //QPair<QString, QString> getCallParts(const QString &_c);
 
     bool darkMode, callValidation;
     QString dbPath;

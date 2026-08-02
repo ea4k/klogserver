@@ -64,6 +64,14 @@ UDPServer::UDPServer(QObject *parent) :
 
 }
 
+UDPServer::~UDPServer()
+{
+    delete lastQso;
+    delete util;
+    delete parseN1MM;
+    delete parseWSJTX;
+}
+
 void UDPServer::slotReadPendingDatagrams()
 {
    //qDebug() << Q_FUNC_INFO;
